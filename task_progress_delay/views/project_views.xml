@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	
+	<data>
+
+        <record id="edit_project-view" model="ir.ui.view">
+    <field name="name">Project Edit View</field>
+    <field name="model">project.project</field>
+    <field name="inherit_id" ref="project.edit_project"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='name']" position="after">
+          <div>
+                <td>
+                    <h5>
+                        <b>Code Prefix </b>
+                    </h5>
+                                        <field name="prefix_code"/>
+                                    </td>
+          </div>
+      </xpath>
+    </field>
+        </record>
+		<!-- Inherited task stage form -->
+		<record id="task_type_form_inherit" model="ir.ui.view">
+            <field name="name">project.task.type.form.inherit</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_edit"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='mail_template_id']" position="after">
+            		<field name="lead_time"/>
+            		<field name="allocation"/>
+            	</xpath>
+            </field>
+        </record>
+		
+		<!-- Inherited task stage tree -->
+        <record id="task_type_tree_inherit" model="ir.ui.view">
+            <field name="name">project.task.type.tree.inherit</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_tree"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='name']" position="after">
+            		<field name="lead_time"/>
+            		<field name="allocation"/>
+            	</xpath>
+            </field>
+        </record>
+		<record id="account_analytic_line_job_costing_trrree" model="ir.ui.view">
+            <field name="name">account.analytic.line.inherit tree</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr = "//field[@name='unit_amount']" position="before">
+                    <field name="stage_name"/>
+                    <field name="cost_stage"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="project_task_form2_inherit" model="ir.ui.view">
+            <field name="name">project.task.form2.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr = "//field[@name='project_id']" position="before">
+                    <field name="task_code" readonly="1"/>
+                    <field name="prefix_code" invisible="1"/>
+                </xpath>
+
+				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='name']" position="after">
+                                <field name="stage_name"/>
+                                <field name="cost_stage"/>
+                    </xpath>
+                 <xpath expr="//form/sheet/notebook/page[@id='timesheets_tab']" position="attributes">
+                         <attribute name = "string">SLA</attribute>
+                </xpath>
+            	<xpath expr="//page[@name='extra_info']" position="after">
+            		<page name="progress_history" string="Progress History">
+            			<group col="2">
+	        				<field name="task_progress" widget="progressbar"/>
+            			</group>
+            			<field name='progress_histogry_ids'>
+                            <tree decoration-danger="delay_color=='True'" decoration-bf="delay_color=='True'" >
+            					<field name='stage_from_id'/>
+            					<field name='stage_to_id'/>
+            					<field name='date'/>
+            					<field name='time_taken'/>
+            					<field name='delay' store="True"/>
+            					<field name='delay_color' invisible='1' store="True"/>
+            				</tree>
+            			</field>
+            		</page>
+            	</xpath>
+            </field>
+        </record>
+
+        <record id="project_task_tree_inherit" model="ir.ui.view">
+            <field name="name">project.task.tree.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='project_id']" position="after">
+            		<field name="task_progress" widget="progressbar" optional="show"/>
+            	</xpath>
+            </field>
+        </record>
+
+        
+	</data>
+</odoo>
