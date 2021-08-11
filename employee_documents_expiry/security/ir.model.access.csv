@@ -6,3 +6,4 @@ access_hr_employee_document_manager,hr.employee.document_manager,model_hr_employ
 access_hr_employee_document_user,hr.employee.document_user,model_hr_employee_document,hr.group_hr_user,1,1,1,0
 access_customer_document_user,customer.document,model_customer_document,base.group_user,1,1,1,1
 access_customer_checklist_user,customer.checklist,model_customer_checklist,base.group_user,1,1,1,1
+access_document_threshhold_user,document.threshhold,model_document_threshhold,base.group_user,1,1,1,1
