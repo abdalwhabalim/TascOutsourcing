@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Employee Documents',
+    'name': 'Employee Document',
     'version': '14.0.1.1.1',
     'summary': """Manages Employee and Customer Documents With Expiry Notifications.""",
     'description': """Manages Employee and Customer Related Documents with Expiry Notifications.""",
@@ -11,6 +11,7 @@
     'depends': ['base', 'hr'],
     'data': [
         'security/ir.model.access.csv',
+        'views/documents_threshold.xml',
         'views/employee_check_list_view.xml',
         'views/employee_document_view.xml',
         'views/customer_document_view.xml',

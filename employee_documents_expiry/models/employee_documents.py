@@ -37,6 +37,7 @@ class HrEmployeeDocument(models.Model):
     _name = 'hr.employee.document'
     _description = 'HR Employee Documents'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'document_namee'
 
     def mail_reminder(self):
         list=[]
@@ -57,7 +58,8 @@ class HrEmployeeDocument(models.Model):
                 for i in match:
                     if i.reminder_date:
                         exp_date = i.reminder_date - timedelta(days=7)
-                        if date_now >= exp_date:
+                        # if date_now >= exp_date:
+                        if i.reminder_date == today:
                             schedule_activity = self.env['mail.activity'].create({
                                 'note': (('Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
                                 'res_id': i.id,
@@ -68,15 +70,30 @@ class HrEmployeeDocument(models.Model):
                             })
                             schedule_activity.action_close_dialog()
                             mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
-                                           str(i.reminder_date) + ". Please renew it before expiry date"
+                                           str(i.expiry_date) + ". Please renew it before expiry date"
                             main_content = {
-                                'subject': _('Document-%s Expired On %s') % (i.name, i.reminder_date),
+                                'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
                                 'author_id': self.env.user.partner_id.id,
                                 'body_html': mail_content,
                                 'email_to': document_ids.login,
                                 # 'email_to': i.employee_ref.work_email,
                             }
                             self.env['mail.mail'].create(main_content).send()
+        for a in match:
+            if a.reminder_date:
+                exp_date = a.reminder_date - timedelta(days=7)
+                # if date_now >= exp_date:
+                if a.reminder_date == today:
+                    mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + "is going to expire on " + \
+                                   str(a.expiry_date) + ". Please renew it before expiry date"
+                    main_content = {
+                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                        'author_id': self.env.user.partner_id.id,
+                        'body_html': mail_content,
+                        'email_to': a.employee_ref.work_email,
+                        # 'email_to': i.employee_ref.work_email,
+                    }
+                    self.env['mail.mail'].create(main_content).send()
 
     @api.onchange('expiry_date')
     def check_expr_date(self):
@@ -90,15 +107,37 @@ class HrEmployeeDocument(models.Model):
                     }
                 }
 
-    name = fields.Char(string='Document Number', required=True, copy=False)
-    document_name = fields.Many2one('employee.checklist', string='Document', required=True)
+    name = fields.Char(string='Document Number',required=True)
+    document_name = fields.Many2one('employee.checklist', string='Document Type')
     description = fields.Text(string='Description', copy=False)
     expiry_date = fields.Date(string='Expiry Date', copy=False)
-    reminder_date = fields.Date(string='Reminder Date', copy=False)
+    reminder_date = fields.Date(string='Reminder Date', compute='get_reminder_date')
     employee_ref = fields.Many2one('hr.employee', copy=False)
     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.Date.context_today, copy=False)
+    employee_name = fields.Char(related='employee_ref.name',string="Employee Name")
+    model_name = fields.Many2one('ir.model', help="Choose the model name", string="Model",
+                                 ondelete='cascade',domain="[('model', '=','res.partner')]")
+    model_field = fields.Many2one('ir.model.fields', string='Document Type', help="Choose the field",
+                                  domain="[('model_id', '=','hr.employee')]",
+                                  required=True, ondelete='cascade')
+    document_namee = fields.Char(string='Document Name', related='model_field.field_description',readonly=True)
+
+    def get_reminder_date(self):
+        for i in self:
+            document_threshhold = self.env['document.threshhold'].search([('document_name', '=', i.document_namee)])
+            for document in document_threshhold:
+                if document_threshhold:
+                    date_format = '%Y-%m-%d'
+                    orig_date = str(i.expiry_date)
+                    dtObj = datetime.strptime(orig_date, date_format)
+                    days = timedelta(days=int(document.reminder_threshold))
+                    reminder_date = dtObj - days
+                    print('Expiry dateeee',i.expiry_date)
+                    print('days',days)
+                    print('reminder date',reminder_date)
+                    i.reminder_date = reminder_date
 
 
 class HrEmployee(models.Model):

@@ -18,15 +18,19 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="document_name"/>
-                            <field name="cust_attachment_id" widget="many2many_binary" class="oe_inline"/>
-<!--                            <field name="employee_ref" invisible="1"/>-->
+                            <field name="customer_ref"/>
+                            <field name="customer_name"/>
+<!--                            <field name="document_name"/>-->
                         </group>
                         <group>
+                            <field name="model_name" invisible="1"/>
+                            <field name="model_field"/>
+                            <field name="document_name"/>
+                             <field name="name"/>
+                            <field name="cust_attachment_id" widget="many2many_binary" class="oe_inline"/>
                             <field name="issue_date"/>
                             <field name="expiry_date"/>
-                            <field name="reminder_date"/>
+                            <field name="reminder_date" force_save="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -49,6 +53,7 @@
         <field name="model">customer.document</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="customer_name"/>
                 <field name="name"/>
                 <field name="issue_date"/>
                 <field name="expiry_date"/>
@@ -70,4 +75,13 @@
         </field>
     </record>
 
+     <record id="customer_document_action" model="ir.actions.act_window">
+          <field name="name">Customer Document Expiry</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">customer.document</field>
+          <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem id="customer_document_details_menu" name="Customer Documents Expiry"  parent="employee_documents_expiry.master_details_menu_root"
+          action="customer_document_action" sequence="3"/>
 </odoo>

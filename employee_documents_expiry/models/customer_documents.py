@@ -4,12 +4,15 @@ from datetime import datetime, date, timedelta
 
 from odoo import models, fields, api, _
 from ast import literal_eval
-
+import datetime
+from datetime import datetime
+from datetime import timedelta
 
 class CustomerDocument(models.Model):
     _name = 'customer.document'
     _description = 'Customer Documents'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'document_name'
 
     def mail_reminder(self):
         list=[]
@@ -29,8 +32,11 @@ class CustomerDocument(models.Model):
                 print('document_idsdocument_idsdocument_ids',document_ids.login)
                 for i in match:
                     if i.reminder_date:
+                        print('ssssssssssssssssssssssssssssssssssss',i.reminder_date)
+                        print('dddddddddddddddddddddddddddddddddd',today)
                         exp_date = i.reminder_date - timedelta(days=7)
-                        if date_now >= exp_date:
+                        print('eeeeeeeeeeeeeeeeeeeeeeeeeeeee',exp_date)
+                        if i.reminder_date == today:
                             schedule_activity = self.env['mail.activity'].create({
                                 'note': (('Reminder notification for the expiry of Customer %s Document') % (i.customer_ref.name)),
                                 'res_id': i.id,
@@ -41,15 +47,30 @@ class CustomerDocument(models.Model):
                             })
                             schedule_activity.action_close_dialog()
                             mail_content = "  Hello  " + i.customer_ref.name + ",Document " + i.name + "is going to expire on " + \
-                                           str(i.reminder_date) + ". Please renew it before expiry date"
+                                           str(i.expiry_date) + ". Please renew it before expiry date"
                             main_content = {
-                                'subject': _('Customer Document-%s Expired On %s') % (i.name, i.reminder_date),
+                                'subject': _('Customer Document-%s Expired On %s') % (i.name, i.expiry_date),
                                 'author_id': self.env.user.partner_id.id,
                                 'body_html': mail_content,
                                 'email_to': document_ids.login,
                                 # 'email_to': i.employee_ref.work_email,
                             }
                             self.env['mail.mail'].create(main_content).send()
+        for a in match:
+            if a.reminder_date:
+                exp_date = a.reminder_date - timedelta(days=7)
+                if a.reminder_date == today:
+
+                    mail_content = "  Hello  " + a.customer_ref.name + ",Document " + a.name + "is going to expire on " + \
+                                   str(a.expiry_date) + ". Please renew it before expiry date"
+                    main_content = {
+                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                        'author_id': self.env.user.partner_id.id,
+                        'body_html': mail_content,
+                        'email_to': a.customer_ref.email,
+                        # 'email_to': i.employee_ref.work_email,
+                    }
+                    self.env['mail.mail'].create(main_content).send()
 
     @api.onchange('expiry_date')
     def check_expr_date(self):
@@ -64,14 +85,38 @@ class CustomerDocument(models.Model):
                 }
 
     name = fields.Char(string='Document Number', required=True, copy=False)
-    document_name = fields.Many2one('customer.checklist', string='Document', required=True)
+    # document_name = fields.Many2one('customer.checklist', string='Document Type', required=True)
     description = fields.Text(string='Description', copy=False)
     expiry_date = fields.Date(string='Expiry Date', copy=False)
-    reminder_date = fields.Date(string='Reminder Date', copy=False)
-    customer_ref = fields.Many2one('res.partner', copy=False)
+    reminder_date = fields.Date(string='Reminder Date', compute='get_reminder_date')
+    customer_ref = fields.Many2one('res.partner',string="Customer Name")
+    customer_name = fields.Char(related='customer_ref.name',string="Customer Name")
     cust_attachment_id = fields.Many2many('ir.attachment', 'cust_attach_rel', 'cust_id3', 'attchc_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.Date.context_today, copy=False)
+
+    model_name = fields.Many2one('ir.model', help="Choose the model name", string="Model",
+                                 ondelete='cascade',domain="[('model', '=','res.partner')]")
+    model_field = fields.Many2one('ir.model.fields', string='Document Type', help="Choose the field",
+                                  domain="[('model_id', '=','res.partner')]",
+                                  # ('ttype', 'in', ['datetime', 'date'])]",
+                                  required=True, ondelete='cascade')
+    document_name = fields.Char(string='Document Name', related='model_field.field_description',readonly=True)
+
+    def get_reminder_date(self):
+        for i in self:
+            document_threshhold = self.env['document.threshhold'].search([('document_name', '=', i.document_name)])
+            for document in document_threshhold:
+                if document_threshhold:
+                    date_format = '%Y-%m-%d'
+                    orig_date = str(i.expiry_date)
+                    dtObj = datetime.strptime(orig_date, date_format)
+                    days = timedelta(days=int(document.reminder_threshold))
+                    reminder_date = dtObj - days
+                    print('Expiry dateeee',i.expiry_date)
+                    print('days',days)
+                    print('reminder date',reminder_date)
+                    i.reminder_date = reminder_date
 
 
 class ResPartner(models.Model):
