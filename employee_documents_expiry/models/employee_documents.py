@@ -143,6 +143,47 @@ class HrEmployeeDocument(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    client_name = fields.Many2one('res.partner', string='Client Name')
+    date_of_joining = fields.Date("Date of Joining")
+    passport_expiry = fields.Date("Passport Expiry Date")
+    visa_valid_from = fields.Date("Visa Valid From")
+    probation_term_months = fields.Char(string='Probation Term Months')
+    visa_type = fields.Selection([('residencevisa', 'Residence Visa'), ('tecom', 'Residence Visa TECOM'),('labourcard', 'Labour Card'), ('missionvisa', 'Mission Visa')
+                                  , ('nonsponsored', 'Non Sponsored ID Card'), ('parttime', 'Part Time Labour Card'),
+                                  ('temporary', 'Temporary Labour Card')], string='Visa Type')
+    ctc = fields.Monetary('CTC', currency_field='currency_id', default=0.0)
+    basic = fields.Monetary('Basic', currency_field='currency_id', default=0.0)
+    hra = fields.Monetary('HRA', currency_field='currency_id', default=0.0)
+    transport = fields.Monetary('Transport', currency_field='currency_id', default=0.0)
+    other = fields.Monetary('Other', currency_field='currency_id', default=0.0)
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
+    iban_number = fields.Char(string='IBAN Number')
+    emp_id = fields.Char(string='Employee ID')
+    coverage_category = fields.Selection([('familyfloater', 'Family Floater'), ('na', 'Not Applicable'), ('self', 'Self'),], string='Coverage Category')
+    coverage_level = fields.Selection([('age0-15', 'Age 0-15'),('age16-20', 'Age 16-20'),('age19-34', 'Age 19-34'),('age21-25', 'Age 21-25'),
+                                       ('age26-30', 'Age 26-30'),
+                                       ('age31-35', 'Age 31-35'),('age35-41', 'Age 35-41'),('age36-40', 'Age 36-40'),
+                                       ('age41-45', 'Age 41-45'),('age42-49', 'Age 42-49'),('age 51-55', 'Age  51-55'),
+                                       ('na', 'Not Applicable'),('self', 'Self'),('selfone', 'Self + 1'),('selfto', 'Self + 2'),
+                                       ('self3', 'Self + 3'),
+                                       ('self4', 'Self + 4'),
+
+                                       ], string='Coverage Level')
+    insurance_category = fields.Selection([('blue', 'Blue'), ('gold', 'Gold'), ('silver', 'Silver'),('platinum', 'Platinum'),],
+                                          string='Insurance Category')
+    employee_status = fields.Char(string='Employee Status')
+    ministry_of_labor = fields.Char(string='Ministry Of Labour')
+    mol_expiry = fields.Date("MOL Expiry Date")
+    labor_card = fields.Char(string='Labour Card')
+    lc_expiry = fields.Date("LC Expiry Date")
+    insurance_card_expiry = fields.Date("Insurance Card Expiry")
+    insurance_expiry = fields.Date("Insurance Expiry")
+    emirates_id = fields.Char(string='Emirates ID')
+    eid_expiry = fields.Date("EID Expiry Date")
+    ohc_expiry = fields.Date("OHC Expiry Date")
+    dl_expiry = fields.Date("DL Expiry Date")
+    access_card_expiry = fields.Date("Access Card Expiry Date")
+
 
     def _document_count(self):
         for each in self:
