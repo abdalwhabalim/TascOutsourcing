@@ -13,6 +13,8 @@ class Project(models.Model):
 	_inherit = "project.project"
 
 	prefix_code = fields.Char(string='Prefix Code', required=True)
+	category = fields.Selection([('employee', 'Employee'), ('clients', 'Clients'), ('admin', 'Admin'),('employees', 'Employees'),],string='Category')
+	sla_in_hours = fields.Char(string='SLA(in hours)')
 
 
 class AccountAnalyticLine(models.Model):
