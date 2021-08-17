@@ -160,9 +160,10 @@ class HrEmployee(models.Model):
     iban_number = fields.Char(string='IBAN Number')
     emp_id = fields.Char(string='Employee ID')
     coverage_category = fields.Selection([('familyfloater', 'Family Floater'), ('na', 'Not Applicable'), ('self', 'Self'),], string='Coverage Category')
-    coverage_level = fields.Selection([('age0-15', 'Age 0-15'),('age16-20', 'Age 16-20'),('age19-34', 'Age 19-34'),('age21-25', 'Age 21-25'),
+    coverage_level = fields.Selection([('age0-15', 'Age 0-15'),('age16-20', 'Age 16-20'),('age19-34', 'Age 19-34'),
+                                       ('age21-25', 'Age 21-25'),
                                        ('age26-30', 'Age 26-30'),
-                                       ('age31-35', 'Age 31-35'),('age35-41', 'Age 35-41'),('age36-40', 'Age 36-40'),
+                                           ('age31-35', 'Age 31-35'),('age35-41', 'Age 35-41'),('age36-40', 'Age 36-40'),
                                        ('age41-45', 'Age 41-45'),('age42-49', 'Age 42-49'),('age 51-55', 'Age  51-55'),
                                        ('na', 'Not Applicable'),('self', 'Self'),('selfone', 'Self + 1'),('selfto', 'Self + 2'),
                                        ('self3', 'Self + 3'),

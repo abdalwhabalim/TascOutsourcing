@@ -19,6 +19,24 @@
                                     </td>
           </div>
       </xpath>
+        <xpath expr="//field[@name='label_tasks']" position="after">
+            <div>
+                <td>
+                    <h5>
+                        <b>Category</b>
+                    </h5>
+                                        <field name="category"/>
+                                    </td>
+          </div>
+            <div>
+                <td>
+                    <h5>
+                        <b>SLA(in hours)</b>
+                    </h5>
+                                        <field name="sla_in_hours"/>
+                                    </td>
+          </div>
+        </xpath>
     </field>
         </record>
 		<!-- Inherited task stage form -->
