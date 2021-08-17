@@ -34,7 +34,7 @@ class projectTaskType(models.Model):
 	_inherit = 'project.task.type'
 
 
-	lead_time = fields.Integer('Lead Time')
+	lead_time = fields.Integer('SLA for stages')
 	allocation = fields.Float('Allocation in project')
 
 class projectTask(models.Model):
