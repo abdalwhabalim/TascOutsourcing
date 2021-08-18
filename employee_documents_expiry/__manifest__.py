@@ -3,7 +3,7 @@
     'name': 'Employee Document',
     'version': '14.0.1.1.1',
     'summary': """Manages Employee and Customer Documents With Expiry Notifications.""",
-    'description': """Manages Employee and Customer Related Documents with Expiry Notifications.""",
+    'description': """Manages Employee and Customer Related Documents with Expiry Notifications""",
     'category': 'Generic Modules/Human Resources',
     'author': 'TechnovicInfotech',
     'company': 'TechnovicInfotech',
