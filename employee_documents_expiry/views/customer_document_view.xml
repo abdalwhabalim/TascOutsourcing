@@ -72,6 +72,90 @@
                     <field string="Documents" name="document_count" widget="statinfo"/>
                 </button>
             </div>
+            <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="type" />
+                    <field name="manager_license" />
+
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">
+                    <page string="Documents Expiry Details">
+                        <sheet>
+                            <group>
+                                <group>
+                                    <field name="trade_license_number"/>
+                            <field name="trade_license_issue_date"/>
+                            <field name="trade_license_expiry_date"/>
+                            <field name="naqodi_amwal_expiry"/>
+                            <field name="edirham_card_expiry"/>
+                            <field name="esignature_card_expiry"/>
+                            <field name="establishment_card_expiry"/>
+                                </group>
+                                <group>
+                            <field name="immigration_card_expiry"/>
+                            <field name="custom_card_expiry"/>
+                            <field name="ejari_expiry"/>
+                            <field name="ministry_of_economy_expiry"/>
+                            <field name="chamber_of_commerce_expiry"/>
+                            <field name="iso_certification_issue_date"/>
+                            <field name="iso_certification_expiry"/>
+                            <field name="vat_certificate_issue_date"/>
+                            <field name="vat_certificate_expiry"/>
+                            <field name="mulkiya_issue_date"/>
+                            <field name="mulkiya_expiry"/>
+                            <field name="po_box_expiry"/>
+
+                                </group>
+                            </group>
+
+
+                        </sheet>
+                    </page>
+                     </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">
+                    <page string="POC Details">
+                        <sheet>
+                            <group>
+                                <group>
+                                     <field name="poc_name" />
+                    <field name="poc_contact_number" />
+                    <field name="poc_email" />
+                    <field name="location" />
+                                </group>
+                            </group>
+                        </sheet>
+                    </page>
+                     </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">
+                    <page string="Sponsor Details">
+                        <sheet>
+                            <group>
+                                <group>
+                                     <field name="sponsor_passport_no" />
+                    <field name="sponsor_passport_copy_issue_date" />
+                    <field name="sponsor_passport_copy_expiry_date" />
+                    <field name="sponsor_emirate_id_issue_date" />
+                    <field name="sponsor_emirate_id_expiry" />
+                    <field name="status_of_license" />
+                                </group>
+                            </group>
+                        </sheet>
+                    </page>
+                     </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">
+                    <page string="Other Details">
+                        <sheet>
+                            <group>
+                                <group>
+                                     <field name="contract_start_date" />
+                    <field name="contract_end_date" />
+                    <field name="tenancy_contract_issue_date" />
+                    <field name="tenancy_contract_expiry" />
+                    <field name="ejari_start_date" />
+                                </group>
+                            </group>
+                        </sheet>
+                    </page>
+                     </xpath>
         </field>
     </record>
 

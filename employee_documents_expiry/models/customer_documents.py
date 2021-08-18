@@ -122,6 +122,44 @@ class CustomerDocument(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'),], string='Type')
+    manager_license = fields.Many2one('res.partner', string='Manager on License')
+    poc_name = fields.Many2one('res.partner', string='POC Name')
+    poc_contact_number = fields.Char(string='POC Contact Number')
+    poc_email = fields.Char(string='POC Email id')
+    contract_start_date = fields.Date("Contract Start Date")
+    contract_end_date = fields.Date("Contract End Date")
+    location = fields.Many2one('res.country', string='Location')
+    trade_license_number = fields.Char(string='Trade License Number')
+    trade_license_issue_date = fields.Date("Trade License Issue Date")
+    trade_license_expiry_date = fields.Date("Trade License Expiry Date")
+    naqodi_amwal_expiry = fields.Date("Naqodi/ Amwal Expiry")
+    edirham_card_expiry = fields.Date("edirham card Expiry")
+    esignature_card_expiry = fields.Date("Esignature Card Expiry")
+    establishment_card_expiry = fields.Date("Establishment Card Expiry")
+    immigration_card_expiry = fields.Date("Immigration Card Expiry")
+    custom_card_expiry = fields.Date("Custom Card Expiry")
+    tenancy_contract_issue_date = fields.Date("Tenancy Contract Issue Date")
+    tenancy_contract_expiry = fields.Date("Tenancy Contract Expiry")
+    ejari_start_date = fields.Date("Ejari Start Date")
+    ejari_expiry = fields.Date("Ejari Expiry")
+    ministry_of_economy_expiry = fields.Date("Ministry Of Economy Expiry")
+    chamber_of_commerce_expiry = fields.Date("Chamber of Commerce Expiry")
+    iso_certification_issue_date = fields.Date("ISO Certification Issue Date")
+    iso_certification_expiry = fields.Date("ISO Certificate Expiry")
+    vat_certificate_issue_date = fields.Date("VAT Certificate Issue Date")
+    vat_certificate_expiry = fields.Date("VAT Certificate Expiry")
+    mulkiya_issue_date = fields.Date("Mulkiya Issue Date")
+    mulkiya_expiry = fields.Date("Mulkiya Expiry")
+    po_box_expiry = fields.Date("P O Box  Expiry")
+    sponsor_passport_no = fields.Char(string='Sponsor Passport No')
+    sponsor_passport_copy_issue_date = fields.Date("Sponsor Passport Copy Issue Date")
+    sponsor_passport_copy_expiry_date = fields.Date("Sponsor Passport Copy Expiry Date")
+    sponsor_emirate_id_issue_date = fields.Date("Sponsor Emirates ID Issue Date")
+    sponsor_emirate_id_expiry = fields.Date("Sponsor Emirates ID Expiry")
+    status_of_license = fields.Selection([('active', 'Active'), ('inactive', 'Inactive'),
+                                          ], string='Status Of License')
+
 
     def _document_count(self):
         for each in self:
