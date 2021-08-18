@@ -56,44 +56,84 @@ class HrEmployeeDocument(models.Model):
             if document_ids:
                 print('document_idsdocument_idsdocument_ids',document_ids.login)
                 for i in match:
-                    if i.reminder_date:
-                        exp_date = i.reminder_date - timedelta(days=7)
-                        # if date_now >= exp_date:
-                        if i.reminder_date == today:
-                            schedule_activity = self.env['mail.activity'].create({
-                                'note': (('Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
-                                'res_id': i.id,
-                                'res_model_id': move_res_model_id,
-                                'summary': (('Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
-                                'date_deadline': i.reminder_date,
-                                'user_id': document_ids.id,
-                            })
-                            schedule_activity.action_close_dialog()
-                            mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
-                                           str(i.expiry_date) + ". Please renew it before expiry date"
-                            main_content = {
-                                'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
-                                'author_id': self.env.user.partner_id.id,
-                                'body_html': mail_content,
-                                'email_to': document_ids.login,
-                                # 'email_to': i.employee_ref.work_email,
-                            }
-                            self.env['mail.mail'].create(main_content).send()
+                    # if i.first_reminder_date:
+                    #     exp_date = i.first_reminder_date - timedelta(days=7)
+                    #     # if date_now >= exp_date:
+                    if i.first_reminder_date == today:
+                        schedule_activity = self.env['mail.activity'].create({
+                            'note': (('First Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
+                            'res_id': i.id,
+                            'res_model_id': move_res_model_id,
+                            'summary': (('First Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
+                            'date_deadline': i.first_reminder_date,
+                            'user_id': document_ids.id,
+                        })
+                        schedule_activity.action_close_dialog()
+                        mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
+                                       str(i.expiry_date) + ". Please renew it before expiry date"
+                        main_content = {
+                            'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
+                            'author_id': self.env.user.partner_id.id,
+                            'body_html': mail_content,
+                            'email_to': document_ids.login,
+                            # 'email_to': i.employee_ref.work_email,
+                        }
+                        self.env['mail.mail'].create(main_content).send()
+                    elif i.second_reminder_date == today:
+                        schedule_activity = self.env['mail.activity'].create({
+                            'note': (('Second Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
+                            'res_id': i.id,
+                            'res_model_id': move_res_model_id,
+                            'summary': (('Second Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
+                            'date_deadline': i.second_reminder_date,
+                            'user_id': document_ids.id,
+                        })
+                        schedule_activity.action_close_dialog()
+                        mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
+                                       str(i.expiry_date) + ". Please renew it before expiry date"
+                        main_content = {
+                            'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
+                            'author_id': self.env.user.partner_id.id,
+                            'body_html': mail_content,
+                            'email_to': document_ids.login,
+                            # 'email_to': i.employee_ref.work_email,
+                        }
+                        self.env['mail.mail'].create(main_content).send()
+                    elif i.third_reminder_date == today:
+                        schedule_activity = self.env['mail.activity'].create({
+                            'note': (('Third Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
+                            'res_id': i.id,
+                            'res_model_id': move_res_model_id,
+                            'summary': (('Third Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
+                            'date_deadline': i.third_reminder_date,
+                            'user_id': document_ids.id,
+                        })
+                        schedule_activity.action_close_dialog()
+                        mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
+                                       str(i.expiry_date) + ". Please renew it before expiry date"
+                        main_content = {
+                            'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
+                            'author_id': self.env.user.partner_id.id,
+                            'body_html': mail_content,
+                            'email_to': document_ids.login,
+                            # 'email_to': i.employee_ref.work_email,
+                        }
+                        self.env['mail.mail'].create(main_content).send()
         for a in match:
-            if a.reminder_date:
-                exp_date = a.reminder_date - timedelta(days=7)
-                # if date_now >= exp_date:
-                if a.reminder_date == today:
-                    mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + "is going to expire on " + \
-                                   str(a.expiry_date) + ". Please renew it before expiry date"
-                    main_content = {
-                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
-                        'author_id': self.env.user.partner_id.id,
-                        'body_html': mail_content,
-                        'email_to': a.employee_ref.work_email,
-                        # 'email_to': i.employee_ref.work_email,
-                    }
-                    self.env['mail.mail'].create(main_content).send()
+            # if a.reminder_date:
+            #     exp_date = a.reminder_date - timedelta(days=7)
+            #     # if date_now >= exp_date:
+            if a.first_reminder_date == today or a.second_reminder_date == today or a.third_reminder_date == today:
+                mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + "is going to expire on " + \
+                               str(a.expiry_date) + ". Please renew it before expiry date"
+                main_content = {
+                    'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                    'author_id': self.env.user.partner_id.id,
+                    'body_html': mail_content,
+                    'email_to': a.employee_ref.work_email,
+                    # 'email_to': i.employee_ref.work_email,
+                }
+                self.env['mail.mail'].create(main_content).send()
 
     @api.onchange('expiry_date')
     def check_expr_date(self):
@@ -111,7 +151,9 @@ class HrEmployeeDocument(models.Model):
     document_name = fields.Many2one('employee.checklist', string='Document Type')
     description = fields.Text(string='Description', copy=False)
     expiry_date = fields.Date(string='Expiry Date', copy=False)
-    reminder_date = fields.Date(string='Reminder Date', compute='get_reminder_date')
+    first_reminder_date = fields.Date(string='First Reminder Date', compute='get_reminder_date')
+    second_reminder_date = fields.Date(string='Second Reminder Date', compute='get_reminder_date')
+    third_reminder_date = fields.Date(string='Third Reminder Date', compute='get_reminder_date')
     employee_ref = fields.Many2one('hr.employee', copy=False)
     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
@@ -119,25 +161,41 @@ class HrEmployeeDocument(models.Model):
     employee_name = fields.Char(related='employee_ref.name',string="Employee Name")
     model_name = fields.Many2one('ir.model', help="Choose the model name", string="Model",
                                  ondelete='cascade',domain="[('model', '=','res.partner')]")
-    model_field = fields.Many2one('ir.model.fields', string='Document Type', help="Choose the field",
-                                  domain="[('model_id', '=','hr.employee')]",
-                                  required=True, ondelete='cascade')
-    document_namee = fields.Char(string='Document Name', related='model_field.field_description',readonly=True)
+    # model_field_name = fields.Many2one('ir.model.fields', string='Field Name', help="Choose the field",
+    #                               domain="[('model_id', '=','hr.employee')]",
+    #                               required=True, ondelete='cascade')
+    model_field = fields.Many2one('document.threshhold',string='Document Type',domain="[('form_type', '=','employee')]")
+    document_namee = fields.Char(string='Document Name', related='model_field.name',readonly=True)
+
+    # @api.onchange('document_namee')
+    # def _get_expiry_date(self):
+    #     # employee_master = self.env['hr.employee'].search([('field_description', '=', self.document_namee)])
+    #     for i in self.model_field_name:
+    #         if i.field_description == self.document_namee:
+    #             print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',i.name)
+    #     # if employee_master:
+    #     #     self.expiry_date = employee_master.
 
     def get_reminder_date(self):
         for i in self:
-            document_threshhold = self.env['document.threshhold'].search([('document_name', '=', i.document_namee)])
+            document_threshhold = self.env['document.threshhold'].search([('name', '=', i.document_namee)])
             for document in document_threshhold:
                 if document_threshhold:
                     date_format = '%Y-%m-%d'
                     orig_date = str(i.expiry_date)
                     dtObj = datetime.strptime(orig_date, date_format)
-                    days = timedelta(days=int(document.reminder_threshold))
-                    reminder_date = dtObj - days
+                    first_reminder = timedelta(days=int(document.first_reminder_threshold))
+                    second_reminder = timedelta(days=int(document.second_reminder_threshold))
+                    third_reminder = timedelta(days=int(document.third_reminder_threshold))
+                    first_reminder_date = dtObj - first_reminder
+                    second_reminder_date = dtObj - second_reminder
+                    third_reminder_date = dtObj - third_reminder
                     print('Expiry dateeee',i.expiry_date)
-                    print('days',days)
-                    print('reminder date',reminder_date)
-                    i.reminder_date = reminder_date
+                    print('days',first_reminder)
+                    print('reminder date',first_reminder_date)
+                    i.first_reminder_date = first_reminder_date
+                    i.second_reminder_date = second_reminder_date
+                    i.third_reminder_date = third_reminder_date
 
 
 class HrEmployee(models.Model):
@@ -175,10 +233,10 @@ class HrEmployee(models.Model):
     employee_status = fields.Char(string='Employee Status')
     ministry_of_labor = fields.Char(string='Ministry Of Labour')
     mol_expiry = fields.Date("MOL Expiry Date")
-    labor_card = fields.Char(string='Labour Card')
+    labor_card = fields.Char(string='Labour Card NO')
     lc_expiry = fields.Date("LC Expiry Date")
     insurance_card_expiry = fields.Date("Insurance Card Expiry")
-    insurance_expiry = fields.Date("Insurance Expiry")
+    insurance_card_number = fields.Date("Insurance Card Number")
     emirates_id = fields.Char(string='Emirates ID')
     eid_expiry = fields.Date("EID Expiry Date")
     ohc_expiry = fields.Date("OHC Expiry Date")
