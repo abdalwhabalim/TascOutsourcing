@@ -9,12 +9,13 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="document_type"/>
-                            <field name="name" invisible="1"/>
+                            <field name="form_type"/>
+                            <field name="document_part" attrs="{'invisible': [('form_type', '=', 'employee')]}"/>
+                            <field name="document_emp" attrs="{'invisible': [('form_type', '=', 'customer')]}"/>
+                            <field name="name" force_save="1" invisible="1"/>
                              <field name="first_reminder_threshold"/>
                              <field name="second_reminder_threshold"/>
                              <field name="third_reminder_threshold"/>
-                            <field name="form_type"/>
                         </group>
                     </group>
                 </sheet>
