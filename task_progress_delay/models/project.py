@@ -14,7 +14,7 @@ class Project(models.Model):
 
 	prefix_code = fields.Char(string='Prefix Code', required=True)
 	category = fields.Selection([('employee', 'Employee'), ('clients', 'Clients'), ('admin', 'Admin'),('employees', 'Employees'),],string='Category')
-	sla_in_hours = fields.Char(string='SLA(in hours)')
+	sla_in_hours = fields.Float(string='SLA(in hours)')
 
 
 class AccountAnalyticLine(models.Model):
@@ -22,7 +22,8 @@ class AccountAnalyticLine(models.Model):
 	_inherit = 'account.analytic.line'
 
 	stage_name = fields.Many2one('project.task.type',string="Stage Name",)
-	cost_stage = fields.Char(string='Cost')
+	cost_stage = fields.Float(string='Task Cost')
+	gov_fee = fields.Float(string='Government Fee')
 
 
 # stage_name = fields.Many2one(string="Stage Name", related='task_id.stage_id.name',readonly=True)
@@ -41,9 +42,38 @@ class projectTask(models.Model):
 	_inherit = 'project.task'
 
 	task_code = fields.Char(string="Task Number")
+	type = fields.Selection(
+		[('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'), ],
+		string='Type',related='partner_id.type')
 	task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
 	progress_histogry_ids = fields.One2many('task.progress.history','task_id')
 	prefix_code = fields.Char(string='Prefix Code')
+	planned_hours = fields.Float("Initially Planned Hours",related='project_id.sla_in_hours',
+								 help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+	delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
+	total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
+	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
+	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
+
+	def calculate_task_cost(self):
+		self.total_task_cost = 0
+		self.total_govt_fee = 0
+		self.total_cost = 0
+		for rec in self:
+			tasks = self.env['account.analytic.line'].search([('task_id', '=', rec.id)])
+			if tasks:
+				for task in tasks:
+					rec.total_task_cost += task.cost_stage
+					rec.total_govt_fee += task.gov_fee
+					rec.total_cost = rec.total_task_cost + rec.total_govt_fee
+
+	def calculate_time_delay(self):
+		self.delay_notify = 0
+		for rec in self:
+			# print('recdddddddddddddddddddddddtime_taken', rec.time_taken)
+			if rec.effective_hours > rec.planned_hours:
+				rec.delay_notify = 'True'
+		return True
 
 	@api.model
 	def create(self, vals):
