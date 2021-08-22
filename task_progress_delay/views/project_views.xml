@@ -85,7 +85,7 @@
                     <field name="partner_id" required="1"/>
                 </xpath>
                  <xpath expr = "//field[@name='planned_hours']" position="replace">
-                    <field name="planned_hours" readonly="0"/>
+                    <field name="planned_hours" nolabel="1" readonly="0"/>
                 </xpath>
 <!--                				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']-->
 <!--                				" position="inside">-->
