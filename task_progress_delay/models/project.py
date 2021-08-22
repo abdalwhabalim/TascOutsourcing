@@ -25,6 +25,15 @@ class AccountAnalyticLine(models.Model):
 	cost_stage = fields.Float(string='Task Cost')
 	gov_fee = fields.Float(string='Government Fee')
 
+	@api.model
+	def create(self, vals):
+		# assigning the sequence for the record
+		# if vals.get('code', _('New')) == _('New'):
+		res = super(AccountAnalyticLine, self).create(vals)
+		for j in self:
+			if not j.cost_stage:
+				raise Warning(_('"Please Fill the Cost"'))
+		return res
 
 # stage_name = fields.Many2one(string="Stage Name", related='task_id.stage_id.name',readonly=True)
 	# task_name = fields.Many2one('project.task.type')
@@ -48,12 +57,20 @@ class projectTask(models.Model):
 	task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
 	progress_histogry_ids = fields.One2many('task.progress.history','task_id')
 	prefix_code = fields.Char(string='Prefix Code')
-	planned_hours = fields.Float("Initially Planned Hours",related='project_id.sla_in_hours',
-								 help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+	planned_hours = fields.Float(related='project_id.sla_in_hours',
+								 help='Time planned to achieve this task (including its sub-tasks).', readonly="0",
+								 tracking=True)
 	delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
 	total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
 	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
 	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
+
+	@api.onchange('stage_id')
+	def _change_stage_id(self):
+		for j in self.timesheet_ids:
+			print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+			if not j.cost_stage:
+				raise Warning(_('"Please Fill the Cost"'))
 
 	def calculate_task_cost(self):
 		self.total_task_cost = 0
@@ -75,11 +92,16 @@ class projectTask(models.Model):
 				rec.delay_notify = 'True'
 		return True
 
+
 	@api.model
 	def create(self, vals):
 		# assigning the sequence for the record
 		# if vals.get('code', _('New')) == _('New'):
 		res = super(projectTask, self).create(vals)
+		for j in self.timesheet_ids:
+			print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+			if not j.cost_stage:
+				raise Warning(_('"Please Fill the Cost"'))
 		project = self.env['project.project'].search([('name', '=', res.project_id.name)])
 		if project:
 			res.write({'prefix_code': project.prefix_code,
@@ -114,7 +136,6 @@ class projectTask(models.Model):
 			total_time = 0
 			for j in self.timesheet_ids:
 				if not j.cost_stage:
-						print('Please Check the Last Milestone')
 						raise Warning(_('"Please Fill the Cost"'))
 				print('valsssssssssssssssssssssssssssssssssss',self.stage_id.name)
 				print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.name)
