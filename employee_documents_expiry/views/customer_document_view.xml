@@ -94,6 +94,7 @@
                 </button>
             </div>
             <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="type" invisible="1" />
                     <field name="cust_type" />
                     <field name="manager_license" />
 
