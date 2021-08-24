@@ -53,6 +53,7 @@ class projectTask(models.Model):
 	_inherit = 'project.task'
 
 	task_code = fields.Char(string="Task Number")
+	task_stage = fields.Char(string="Stage Name",related='stage_id.name')
 	type = fields.Selection(
 		[('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'), ],
 		string='Type',related='partner_id.customer_def_type')
@@ -68,17 +69,19 @@ class projectTask(models.Model):
 	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
 
 	@api.onchange('stage_id')
-	def _change_stage_id(self):
+	def _change_stage_id(self,):
+		# print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',vals['stage_id'])
 		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.stage_id.name)
 		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.timesheet_ids)
 		if not self.timesheet_ids:
 			raise Warning(_('"Please Fill the Timesheet Entries"'))
-		for j in self.timesheet_ids:
-			print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.name)
-			if j.stage_name.name != self.stage_id.name:
-				raise Warning(_('"Please Fill the Stage Name"'))
-			if not j.cost_stage:
-				raise Warning(_('"Please Fill the Cost"'))
+		# for j in self.timesheet_ids:
+		# 	print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.name)
+		# 	print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',self.task_stage)
+		# 	if j.stage_name.name != self.task_stage:
+		# 		raise Warning(_('"Please Fill the Stage Name"'))
+		# 	# if not j.cost_stage:
+		# 	# 	raise Warning(_('"Please Fill the Cost"'))
 
 	def calculate_task_cost(self):
 		self.total_task_cost = 0
@@ -108,8 +111,8 @@ class projectTask(models.Model):
 		res = super(projectTask, self).create(vals)
 		for j in self.timesheet_ids:
 			print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-			if not j.cost_stage:
-				raise Warning(_('"Please Fill the Cost"'))
+			if not j.cost_stage or j.unit_amount:
+				raise Warning(_('"Please Fill the Cost and Duration"'))
 		project = self.env['project.project'].search([('name', '=', res.project_id.name)])
 		if project:
 			res.write({'prefix_code': project.prefix_code,
