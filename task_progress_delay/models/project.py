@@ -75,11 +75,11 @@ class projectTask(models.Model):
 		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.timesheet_ids)
 		if not self.timesheet_ids:
 			raise Warning(_('"Please Fill the Timesheet Entries"'))
-		# for j in self.timesheet_ids:
-		# 	print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.name)
-		# 	print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',self.task_stage)
-		# 	if j.stage_name.name != self.task_stage:
-		# 		raise Warning(_('"Please Fill the Stage Name"'))
+		for j in self.timesheet_ids:
+			print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.id)
+			print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',self.stage_id.id)
+			# if j.stage_name.name != self.task_stage:
+			# 	raise Warning(_('"Please Fill the Stage Name"'))
 		# 	# if not j.cost_stage:
 		# 	# 	raise Warning(_('"Please Fill the Cost"'))
 

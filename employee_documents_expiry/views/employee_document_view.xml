@@ -185,6 +185,17 @@
                             <field name="ctc" class="oe_inline"/> per Year
                             <field name="currency_id" invisible="1"/>
                         </div>
+                            <label for="allowance"/>
+                        <div>
+                            <field name="allowance" class="oe_inline"/> per Year
+                            <field name="currency_id" invisible="1"/>
+                        </div>
+                            <label for="base_salary"/>
+                        <div>
+                            <field name="base_salary" class="oe_inline"/> per Year
+                            <field name="currency_id" invisible="1"/>
+                        </div>
+
                             <label for="basic"/>
                         <div>
                             <field name="basic" class="oe_inline"/> per Year

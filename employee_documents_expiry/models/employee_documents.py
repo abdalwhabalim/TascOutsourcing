@@ -210,6 +210,8 @@ class HrEmployee(models.Model):
                                   , ('nonsponsored', 'Non Sponsored ID Card'), ('parttime', 'Part Time Labour Card'),
                                   ('temporary', 'Temporary Labour Card')], string='Visa Type')
     ctc = fields.Monetary('CTC', currency_field='currency_id', default=0.0)
+    allowance = fields.Monetary('Allowances', currency_field='currency_id', default=0.0)
+    base_salary = fields.Monetary('Base Salary', currency_field='currency_id', default=0.0)
     basic = fields.Monetary('Basic', currency_field='currency_id', default=0.0)
     hra = fields.Monetary('HRA', currency_field='currency_id', default=0.0)
     transport = fields.Monetary('Transport', currency_field='currency_id', default=0.0)
