@@ -31,6 +31,8 @@ class AccountAnalyticLine(models.Model):
 		# if vals.get('code', _('New')) == _('New'):
 		res = super(AccountAnalyticLine, self).create(vals)
 		for j in self:
+			if j.stage_name.name != self.stage_id.name:
+				raise Warning(_('"Please Fill the Stage Name"'))
 			if not j.cost_stage:
 				raise Warning(_('"Please Fill the Cost"'))
 		return res
@@ -53,7 +55,7 @@ class projectTask(models.Model):
 	task_code = fields.Char(string="Task Number")
 	type = fields.Selection(
 		[('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'), ],
-		string='Type',related='partner_id.type')
+		string='Type',related='partner_id.cust_type')
 	task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
 	progress_histogry_ids = fields.One2many('task.progress.history','task_id')
 	prefix_code = fields.Char(string='Prefix Code')
@@ -67,8 +69,14 @@ class projectTask(models.Model):
 
 	@api.onchange('stage_id')
 	def _change_stage_id(self):
+		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.stage_id.name)
+		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.timesheet_ids)
+		if not self.timesheet_ids:
+			raise Warning(_('"Please Fill the Timesheet Entries"'))
 		for j in self.timesheet_ids:
-			print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+			print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.name)
+			if j.stage_name.name != self.stage_id.name:
+				raise Warning(_('"Please Fill the Stage Name"'))
 			if not j.cost_stage:
 				raise Warning(_('"Please Fill the Cost"'))
 
