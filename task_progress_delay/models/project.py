@@ -31,10 +31,10 @@ class AccountAnalyticLine(models.Model):
 		# if vals.get('code', _('New')) == _('New'):
 		res = super(AccountAnalyticLine, self).create(vals)
 		for j in self:
-			if j.stage_name.name != self.stage_id.name:
-				raise Warning(_('"Please Fill the Stage Name"'))
-			if not j.cost_stage:
-				raise Warning(_('"Please Fill the Cost"'))
+			# if j.stage_name.name != self.stage_id.name:
+			# 	raise Warning(_('"Please Fill the Stage Name"'))
+			if not j.cost_stage and j.unit_amount:
+				raise Warning(_('"Please Fill the Cost and Duration"'))
 		return res
 
 # stage_name = fields.Many2one(string="Stage Name", related='task_id.stage_id.name',readonly=True)
