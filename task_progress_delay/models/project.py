@@ -73,7 +73,7 @@ class projectTask(models.Model):
 	task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
 	progress_histogry_ids = fields.One2many('task.progress.history','task_id')
 	prefix_code = fields.Char(string='Prefix Code')
-	planned_hours = fields.Float(related='project_id.turnaround_time_days',
+	planned_hours = fields.Float(related='project_id.turnaround_time_hours',
 								 help='Time planned to achieve this task (including its sub-tasks).', readonly="0",
 								 tracking=True)
 	planned_days_project = fields.Float(related='project_id.turnaround_time_days',string='Turnaround Time (in Days)')
