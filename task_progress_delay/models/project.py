@@ -81,12 +81,17 @@ class projectTask(models.Model):
 	total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
 	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
 	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
-	date_deadline = fields.Date(string="Date Deadline", compute='get_date_deadline')
+	# date_deadline = fields.Datetime(string="Date Deadline", compute='get_date_deadline')
 	planned_date_begin = fields.Datetime("Start date")
 	planned_date_end = fields.Datetime("End date",compute='get_date_deadline')
 
+	# @api.onchange('planned_date_end')
+	# def _change_deadline(self):
+	# 	for i in self:
+	# 		i.date_deadline = i.planned_date_end
+
 	def get_date_deadline(self):
-		self.date_deadline = False
+		# self.date_deadline = False
 		self.planned_date_end = False
 		for self in self:
 			if self.planned_date_begin != False or self.planned_date_end != False:
@@ -100,16 +105,7 @@ class projectTask(models.Model):
 				self.planned_date_end = datetime_object + date_deadline
 
 
-	@api.onchange('stage_id')
-	def _change_stage_id(self,):
-		# print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',vals['stage_id'])
-		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.stage_id.name)
-		print('creAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',self.timesheet_ids)
-		if not self.timesheet_ids:
-			raise Warning(_('"Please Fill the Timesheet Entries"'))
-		for j in self.timesheet_ids:
-			print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',j.stage_name.id)
-			print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',self.stage_id.id)
+	#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',self.stage_id.id)
 			# if j.stage_name.name != self.task_stage:
 			# 	raise Warning(_('"Please Fill the Stage Name"'))
 		# 	# if not j.cost_stage:
