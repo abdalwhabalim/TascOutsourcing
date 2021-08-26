@@ -171,7 +171,7 @@
             	<xpath expr="//field[@name='project_id']" position="after">
             		<field name="task_progress" widget="progressbar" optional="show"/>
             		<field name="type"/>
-                    <field name='delay_notify'/>
+                    <field name='delay_notify' invisible='1'/>
                     <field name='total_task_cost'/>
                     <field name='total_govt_fee'/>
                     <field name='total_cost'/>
