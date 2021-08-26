@@ -75,7 +75,7 @@ class projectTask(models.Model):
 	planned_hours = fields.Float(related='project_id.turnaround_time_days',
 								 help='Time planned to achieve this task (including its sub-tasks).', readonly="0",
 								 tracking=True)
-	planned_days_project = fields.Float(related='project_id.turnaround_time_days')
+	planned_days_project = fields.Float(related='project_id.turnaround_time_days',string='Turnaround Time (in Days)')
 	delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
 	total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
 	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
