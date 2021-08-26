@@ -15,6 +15,18 @@ class Project(models.Model):
 	prefix_code = fields.Char(string='Prefix Code', required=True)
 	category = fields.Selection([('employee', 'Employee'), ('clients', 'Clients'), ('admin', 'Admin'),('employees', 'Employees'),],string='Category')
 	sla_in_hours = fields.Float(string='SLA(in hours)')
+	turnaround_time_days = fields.Float(string='TurnAround Time(in days)')
+	turnaround_time_hours = fields.Float(string='TurnAround Time(in hours)',compute='_get_turnaround_hours')
+
+	def _get_turnaround_hours(self):
+		self.turnaround_time_hours = 0
+		company_id = self.env.company.id
+		resource = self.env['resource.calendar'].search([('company_id', '=', company_id),('company_calendar', '=', True)])
+		for project in self:
+			# for i in resource:
+			if resource:
+				print('fffffffffffffffffffffffffffffffffffffffffffffffff')
+				project.turnaround_time_hours = project.turnaround_time_days * resource.hours_per_day
 
 
 class AccountAnalyticLine(models.Model):
@@ -46,7 +58,7 @@ class projectTaskType(models.Model):
 	_inherit = 'project.task.type'
 
 
-	lead_time = fields.Integer('SLA for stages')
+	lead_time = fields.Integer('Turnaround Time')
 	allocation = fields.Float('Allocation in project')
 
 class projectTask(models.Model):
@@ -60,13 +72,30 @@ class projectTask(models.Model):
 	task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
 	progress_histogry_ids = fields.One2many('task.progress.history','task_id')
 	prefix_code = fields.Char(string='Prefix Code')
-	planned_hours = fields.Float(related='project_id.sla_in_hours',
+	planned_hours = fields.Float(related='project_id.turnaround_time_days',
 								 help='Time planned to achieve this task (including its sub-tasks).', readonly="0",
 								 tracking=True)
+	planned_days_project = fields.Float(related='project_id.turnaround_time_days')
 	delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
 	total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
 	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
 	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
+	date_deadline = fields.Date(string="Date Deadline", compute='get_date_deadline')
+	planned_date_begin = fields.Date("Start date")
+	planned_date_end = fields.Date("End date",compute='get_date_deadline')
+
+	def get_date_deadline(self):
+		self.date_deadline = False
+		self.planned_date_end = False
+		for self in self:
+			if self.planned_date_begin != False or self.planned_date_end != False:
+				date_format = '%Y-%m-%d'
+				orig_date = str(self.planned_date_begin)
+				dtObj = datetime.strptime(orig_date, date_format)
+				date_deadline = timedelta(days=int(self.planned_days_project))
+				self.date_deadline = dtObj + date_deadline
+				self.planned_date_end = dtObj + date_deadline
+
 
 	@api.onchange('stage_id')
 	def _change_stage_id(self,):
@@ -191,3 +220,8 @@ class taskProgressHistory(models.Model):
 			if rec.delay < 0:
 				rec.delay_color = 'True'
 		return True
+
+class Worked_schedule(models.Model):
+	_inherit = "resource.calendar"
+
+	company_calendar = fields.Boolean(string='Company Calendar')

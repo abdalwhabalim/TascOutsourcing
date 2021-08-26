@@ -170,7 +170,7 @@ class CustomerDocument(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
+    # type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
     customer_def_type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
     manager_license = fields.Many2one('res.partner', string='Manager on License')
     poc_name = fields.Many2one('res.partner', string='POC Name')
