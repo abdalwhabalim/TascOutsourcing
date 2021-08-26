@@ -81,8 +81,8 @@ class projectTask(models.Model):
 	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
 	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
 	date_deadline = fields.Date(string="Date Deadline", compute='get_date_deadline')
-	planned_date_begin = fields.Date("Start date")
-	planned_date_end = fields.Date("End date",compute='get_date_deadline')
+	planned_date_starting = fields.Date("Start date")
+	planned_date_finishing = fields.Date("End date",compute='get_date_deadline')
 
 	def get_date_deadline(self):
 		self.date_deadline = False
