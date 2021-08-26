@@ -7,6 +7,7 @@ from datetime import time
 from odoo.tools.translate import _
 from odoo.exceptions import Warning
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 class Project(models.Model):
 
@@ -81,20 +82,22 @@ class projectTask(models.Model):
 	total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
 	total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
 	date_deadline = fields.Date(string="Date Deadline", compute='get_date_deadline')
-	planned_date_starting = fields.Date("Start date")
-	planned_date_finishing = fields.Date("End date",compute='get_date_deadline')
+	planned_date_begin = fields.Datetime("Start date")
+	planned_date_end = fields.Datetime("End date",compute='get_date_deadline')
 
 	def get_date_deadline(self):
 		self.date_deadline = False
 		self.planned_date_end = False
 		for self in self:
 			if self.planned_date_begin != False or self.planned_date_end != False:
-				date_format = '%Y-%m-%d'
-				orig_date = str(self.planned_date_begin)
-				dtObj = datetime.strptime(orig_date, date_format)
+				# datetime_str = '09/19/18 13:55:26'
+				string_start = str(self.planned_date_begin)
+				datetime_object = datetime.strptime(string_start, '%Y-%m-%d %H:%M:%S')
+				print(type(datetime_object))
+				print(datetime_object)  # printed in default format
 				date_deadline = timedelta(days=int(self.planned_days_project))
-				self.date_deadline = dtObj + date_deadline
-				self.planned_date_end = dtObj + date_deadline
+				self.date_deadline = datetime_object + date_deadline
+				self.planned_date_end = datetime_object + date_deadline
 
 
 	@api.onchange('stage_id')

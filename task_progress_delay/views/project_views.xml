@@ -118,8 +118,8 @@
 
 <!--                                </xpath>-->
                 <xpath expr = "//field[@name='partner_id']" position="after">
-                    <field name="planned_date_starting"/>
-                    <field name="planned_date_finishing" />
+                    <field name="planned_date_begin"/>
+                    <field name="planned_date_end" />
                     <field name="planned_days_project"/>
                     <field name="type" readonly="1"/>
                 </xpath>
