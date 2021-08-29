@@ -34,7 +34,7 @@ class Project(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    stage_name = fields.Many2one('project.task.type', string="Stage Name", )
+    stage_name = fields.Many2one('project.task.type', string="Stage Name", domain="[('project_ids', '=', project_id)]")
     cost_stage = fields.Float(string='Task Cost')
     gov_fee = fields.Float(string='Government Fee')
 
@@ -192,6 +192,8 @@ class ProjectTask(models.Model):
     def write(self, vals):
         if vals.get('stage_id', False):
             total_time = 0
+            if len(self.timesheet_ids) == 0:
+                raise Warning(_('"Please Fill the task cost or Government fee"'))
             for j in self.timesheet_ids:
                 if j.cost_stage + j.gov_fee == 0:
                     raise Warning(_('"Please Fill the task cost or Government fee"'))
