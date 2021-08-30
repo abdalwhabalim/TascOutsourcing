@@ -104,7 +104,7 @@ class ProjectTask(models.Model):
     delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
     stage_delay = fields.Char(string='Delay in stage', compute='calculate_stage_delay')
     total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
-    total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
+    total_task_cost = fields.Float(string="Total Tasc Fee", default=0.0, compute='calculate_task_cost')
     total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
     # date_deadline = fields.Datetime(string="Date Deadline", compute='get_date_deadline')
     planned_date_begin = fields.Datetime("Start date")
