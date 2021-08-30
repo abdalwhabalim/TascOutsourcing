@@ -58,7 +58,7 @@ class AccountAnalyticLine(models.Model):
 class projectTaskType(models.Model):
     _inherit = 'project.task.type'
 
-    lead_time = fields.Integer('Turnaround Time')
+    lead_time = fields.Float('Turnaround Time')
     allocation = fields.Float('Allocation in project')
 
 
