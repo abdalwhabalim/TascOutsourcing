@@ -40,6 +40,20 @@ class AccountAnalyticLine(models.Model):
     turn_time = fields.Float(related='stage_name.lead_time',string='Turnaround Time')
     time_hours = fields.Float(string='Turnaround Time',compute='calculate_task_progress_yes')
     task_allocation = fields.Float(string='Turnaround Time',compute='calculate_task_progress_yes')
+    delay_color = fields.Char(string='Delay Color', compute='calculate_delay_task_report')
+
+    def calculate_delay_task_report(self):
+        self.delay_color = 0
+        for rec in self:
+            resource = self.env['resource.calendar'].search(
+                [('company_id', '=', self.company_id.id), ('company_calendar', '=', True)])
+            if resource:
+                time_hours = rec.turn_time * resource.hours_per_day
+                print('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',rec.turn_time)
+                print('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',rec.unit_amount)
+                if rec.unit_amount > time_hours:
+                    rec.delay_color = 'True'
+        return True
 
     @api.depends('stage_id')
     def calculate_progress(self):
