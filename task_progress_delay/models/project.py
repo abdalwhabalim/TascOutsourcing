@@ -35,7 +35,7 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     stage_name = fields.Many2one('project.task.type', string="Stage Name", domain="[('project_ids', '=', project_id)]")
-    cost_stage = fields.Float(string='Task Cost')
+    cost_stage = fields.Float(string='Tasc Fee')
     gov_fee = fields.Float(string='Government Fee')
     turn_time = fields.Float(related='stage_name.lead_time',string='Turnaround Time')
 
@@ -81,12 +81,14 @@ class ProjectTask(models.Model):
                                  tracking=True)
     planned_days_project = fields.Float(related='project_id.turnaround_time_days', string='Turnaround Time (in Days)')
     delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
+    stage_delay = fields.Char(string='Delay in stage', compute='calculate_stage_delay')
     total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
     total_task_cost = fields.Float(string="Total Task Cost", default=0.0, compute='calculate_task_cost')
     total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
     # date_deadline = fields.Datetime(string="Date Deadline", compute='get_date_deadline')
     planned_date_begin = fields.Datetime("Start date")
     planned_date_end = fields.Datetime("End date", store=True)
+    stage_lead_time = fields.Float(related='stage_id.lead_time',string='Stage Turnaround Time')
 
     # @api.onchange('planned_date_end')
     # def _change_deadline(self):
@@ -154,10 +156,23 @@ class ProjectTask(models.Model):
     def calculate_time_delay(self):
         self.delay_notify = 0
         for rec in self:
-            print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec.effective_hours)
-            print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec.planned_hours)
-            if rec.effective_hours > rec.planned_hours:
-                rec.delay_notify = 'True'
+            resource = self.env['resource.calendar'].search(
+                [('company_id', '=', self.company_id.id), ('company_calendar', '=', True)])
+            if resource:
+                time_hours = rec.planned_hours * resource.hours_per_day
+                if rec.effective_hours > time_hours:
+                    rec.delay_notify = 'True'
+        return True
+
+    def calculate_stage_delay(self):
+        self.stage_delay = 0
+        for rec in self:
+            resource = self.env['resource.calendar'].search(
+                [('company_id', '=', self.company_id.id), ('company_calendar', '=', True)])
+            if resource:
+                time_hours = rec.stage_lead_time * resource.hours_per_day
+                if rec.effective_hours > time_hours:
+                    rec.stage_delay = 'True'
         return True
 
     @api.model
@@ -180,21 +195,38 @@ class ProjectTask(models.Model):
                 'task_code': seq,
             })
         return res
+    #
+    # @api.depends('stage_id')
+    # def calculate_progress(self):
+    #     self.task_progress = 0
+    #     for rec in self:
+    #         if rec.stage_id and rec.stage_id.sequence == 0:
+    #             print('whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',rec.stage_id)
+    #             rec.task_progress = 0.0
+    #         else:
+    #             stages = self.env['project.task.type'].search([])
+    #             prev_stages = []
+    #             for stage in stages:
+    #                 if rec.project_id in stage.project_ids and stage.sequence < rec.stage_id.sequence:
+    #                     prev_stages.append(stage)
+    #             for prev_stage in prev_stages:
+    #                 prev_alloc =d
+    #                 rec.task_progress = rec.task_progress + prev_stage.allocation
+    #     return True
 
     @api.depends('stage_id')
     def calculate_progress(self):
         self.task_progress = 0
-        for rec in self:
-            if rec.stage_id and rec.stage_id.sequence == 0:
-                rec.task_progress = 0.0
-            else:
-                stages = self.env['project.task.type'].search([])
-                prev_stages = []
-                for stage in stages:
-                    if rec.project_id in stage.project_ids and stage.sequence < rec.stage_id.sequence:
-                        prev_stages.append(stage)
-                for prev_stage in prev_stages:
-                    rec.task_progress = rec.task_progress + prev_stage.allocation
+        for self in self:
+            for rec in self.timesheet_ids:
+                if rec.stage_name.lead_time != 0:
+                    company_id = self.env.company.id
+                    resource = self.env['resource.calendar'].search(
+                        [('company_id', '=', company_id), ('company_calendar', '=', True)])
+                    if resource:
+                        time_hours = rec.unit_amount / resource.hours_per_day
+                        task_progress = time_hours / rec.stage_name.lead_time
+                        self.task_progress = rec.stage_name.allocation * task_progress
         return True
 
     def write(self, vals):

@@ -88,6 +88,25 @@
             	</xpath>
             </field>
         </record>
+
+<!--         <record id="view_search_id_tr" model="ir.ui.view">-->
+<!--            <field name="name">project.task.type</field>-->
+<!--            <field name="model">project.task.type</field>-->
+<!--            <field name="type">search</field>-->
+<!--            <field name="inherit_id" ref="project.task_type_search"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--           <xpath expr="//search" position="inside">-->
+<!--               <filter string="Projects" icon="terp-personal" domain="[]" context="{'group_by':'project_ids'}"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+
+
+
+
+
 		<record id="account_analytic_line_job_costing_trrree" model="ir.ui.view">
             <field name="name">account.analytic.line.inherit tree</field>
             <field name="model">account.analytic.line</field>
@@ -166,6 +185,7 @@
             			<group col="2">
 	        				<field name="task_progress" widget="progressbar"/>
                     <field name='delay_notify' invisible='1' store="True"/>
+                    <field name='stage_delay' invisible='1' store="True"/>
             			</group>
             			<field name='progress_histogry_ids'>
                             <tree decoration-danger="delay_color=='True'" decoration-bf="delay_color=='True'" >
@@ -192,11 +212,13 @@
             		<field name="task_progress" widget="progressbar" optional="show"/>
             		<field name="type"/>
                     <field name='delay_notify' invisible='1'/>
+                    <field name='stage_delay' invisible='1'/>
                     <field name='total_task_cost'/>
                     <field name='total_govt_fee'/>
                     <field name='total_cost'/>
             	</xpath>
             	<xpath expr="//field[@name='stage_id']" position="after">
+                                        <field name='stage_lead_time'/>
             		<button name="open_task_report"
                             string="Task Report"
                             type="object" class="oe_stat_button" icon="fa-calendar"/>
@@ -207,6 +229,10 @@
                 <xpath expr="//tree" position="attributes">
                      <attribute name="decoration-danger">delay_notify == "True"</attribute>
                     <attribute name="decoration-bf">delay_notify == "True"</attribute>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                     <attribute name="decoration-warning">stage_delay == "True"</attribute>
+                    <attribute name="decoration-bf">stage_delay == "True"</attribute>
                 </xpath>
             </field>
         </record>
