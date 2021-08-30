@@ -47,7 +47,9 @@ class AccountAnalyticLine(models.Model):
             # if j.stage_name.name != self.stage_id.name:
             # 	raise Warning(_('"Please Fill the Stage Name"'))
             if not j.cost_stage and j.unit_amount:
-                raise Warning(_('"Please Fill the Cost and Duration"'))
+                # raise Warning(_('"Please Fill the Cost and Duration"'))
+                print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
+
         return res
 
 
@@ -161,7 +163,9 @@ class ProjectTask(models.Model):
         res = super(ProjectTask, self).create(vals)
         for j in self.timesheet_ids:
             if not j.cost_stage or j.unit_amount:
-                raise Warning(_('"Please Fill the Cost and Duration"'))
+                # raise Warning(_('"Please Fill the Cost and Duration"'))
+                print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
+
         project = self.env['project.project'].search([('name', '=', res.project_id.name)])
         if project:
             res.write({'prefix_code': project.prefix_code,
@@ -193,12 +197,17 @@ class ProjectTask(models.Model):
         if vals.get('stage_id', False):
             total_time = 0
             if len(self.timesheet_ids) == 0:
-                raise Warning(_('"Please Fill the task cost or Government fee"'))
+                # raise Warning(_('"Please Fill the task cost or Government fee"'))
+                print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
             for j in self.timesheet_ids:
                 if j.cost_stage + j.gov_fee == 0:
-                    raise Warning(_('"Please Fill the task cost or Government fee"'))
+                    # raise Warning(_('"Please Fill the task cost or Government fee"'))
+                    print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
+
                 if not j.cost_stage:
-                    raise Warning(_('"Please Fill the Cost"'))
+                    # raise Warning(_('"Please Fill the Cost"'))
+                    print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
+
                 if self.stage_id.name == j.stage_name.name:
                     total_time += j.unit_amount
                     history_vals = {
