@@ -224,7 +224,7 @@ class ProjectTask(models.Model):
                     resource = self.env['resource.calendar'].search(
                         [('company_id', '=', company_id), ('company_calendar', '=', True)])
                     if resource:
-                        time_hours = rec.unit_amount / resource.hours_per_day
+                        time_hours = self.effective_hours / resource.hours_per_day
                         task_progress = time_hours / rec.stage_name.lead_time
                         self.task_progress = rec.stage_name.allocation * task_progress
         return True
