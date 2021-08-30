@@ -100,6 +100,16 @@
                 </xpath>
             </field>
         </record>
+<!--		<record id="account_analytic_line_job_costing_search" model="ir.ui.view">-->
+<!--            <field name="name">account.analytic.line.inherit.search</field>-->
+<!--            <field name="model">account.analytic.line</field>-->
+<!--            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr = "//filter[@name='groupby_task']" position="before">-->
+<!--                    <filter string="Test" name="groupby_delay_notify" domain="[('task_id', '=', True)]" />-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
         <record id="project_task_form2_inherit" model="ir.ui.view">
             <field name="name">project.task.form2.inherit</field>
             <field name="model">project.task</field>
@@ -114,6 +124,12 @@
 <!--                </xpath>-->
                  <xpath expr = "//field[@name='planned_hours']" position="replace">
                     <field name="planned_hours" nolabel="1" readonly="0"/>
+                </xpath>
+                 <xpath expr="//field[@name='progress']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='progress']" position="before">
+                    <field name="task_progress" widget="progressbar"/>
                 </xpath>
 <!--                				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']-->
 <!--                				" position="inside">-->
@@ -132,20 +148,20 @@
                 </xpath>
 
 				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='name']" position="after">
-                                <field name="stage_name"/>
-                                <field name="cost_stage"/>
-                                <field name="gov_fee"/>
-                    </xpath>
+                    <field name="stage_name"/>
+                    <field name="cost_stage"/>
+                    <field name="gov_fee"/>
+                </xpath>
                  <xpath expr="//form/sheet/notebook/page[@id='timesheets_tab']" position="attributes">
                          <attribute name = "string">SLA</attribute>
                 </xpath>
                 <xpath expr="//field[@name='effective_hours']" position="after">
-                                        <field name='total_task_cost' invisible="1" store="True"/>
-                                        <field name='total_govt_fee' invisible="1" store="True"/>
-                                        <field name='total_cost' store="True"/>
+                    <field name='total_task_cost' invisible="1" store="True"/>
+                    <field name='total_govt_fee' invisible="1" store="True"/>
+                    <field name='total_cost' store="True"/>
                 </xpath>
             	<xpath expr="//page[@name='extra_info']" position="after">
-            		<page name="progress_history" string="Progress History">
+            		<page name="progress_history" string="Progress History" invisible="1">
             			<group col="2">
 	        				<field name="task_progress" widget="progressbar"/>
                     <field name='delay_notify' invisible='1' store="True"/>
@@ -178,6 +194,14 @@
                     <field name='total_task_cost'/>
                     <field name='total_govt_fee'/>
                     <field name='total_cost'/>
+            	</xpath>
+            	<xpath expr="//field[@name='stage_id']" position="after">
+            		<button name="open_task_report"
+                            string="Task Report"
+                            type="object" class="oe_stat_button" icon="fa-calendar"/>
+            	</xpath>
+            	<xpath expr="//field[@name='effective_hours']" position="after">
+                    <field name='planned_hours'/>
             	</xpath>
                 <xpath expr="//tree" position="attributes">
                      <attribute name="decoration-danger">delay_notify == "True"</attribute>
