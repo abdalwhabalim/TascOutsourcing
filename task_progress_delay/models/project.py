@@ -37,6 +37,7 @@ class AccountAnalyticLine(models.Model):
     stage_name = fields.Many2one('project.task.type', string="Stage Name", domain="[('project_ids', '=', project_id)]")
     cost_stage = fields.Float(string='Task Cost')
     gov_fee = fields.Float(string='Government Fee')
+    turn_time = fields.Float(related='stage_name.lead_time',string='Turnaround Time')
 
     @api.model
     def create(self, vals):
@@ -149,9 +150,12 @@ class ProjectTask(models.Model):
                     rec.total_govt_fee += task.gov_fee
                     rec.total_cost = rec.total_task_cost + rec.total_govt_fee
 
+    # @api.onchange('effective_hours')
     def calculate_time_delay(self):
         self.delay_notify = 0
         for rec in self:
+            print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec.effective_hours)
+            print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec.planned_hours)
             if rec.effective_hours > rec.planned_hours:
                 rec.delay_notify = 'True'
         return True
@@ -217,7 +221,7 @@ class ProjectTask(models.Model):
                         'date': fields.Date.today(),
                         'time_taken': total_time,
                     }
-                vals['progress_histogry_ids'] = [(0, 0, history_vals)]
+                    vals['progress_histogry_ids'] = [(0, 0, history_vals)]
         return super(ProjectTask, self).write(vals)
 
     # def write(self, vals):

@@ -97,6 +97,7 @@
                     <field name="stage_name"/>
                     <field name="cost_stage"/>
                     <field name="gov_fee"/>
+                    <field name="turn_time"/>
                 </xpath>
             </field>
         </record>
@@ -201,7 +202,7 @@
                             type="object" class="oe_stat_button" icon="fa-calendar"/>
             	</xpath>
             	<xpath expr="//field[@name='effective_hours']" position="after">
-                    <field name='planned_hours'/>
+                    <field name='planned_hours' invisible="1" />
             	</xpath>
                 <xpath expr="//tree" position="attributes">
                      <attribute name="decoration-danger">delay_notify == "True"</attribute>
