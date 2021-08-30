@@ -38,20 +38,41 @@ class AccountAnalyticLine(models.Model):
     cost_stage = fields.Float(string='Tasc Fee')
     gov_fee = fields.Float(string='Government Fee')
     turn_time = fields.Float(related='stage_name.lead_time',string='Turnaround Time')
+    time_hours = fields.Float(string='Turnaround Time',compute='calculate_task_progress_yes')
+    task_allocation = fields.Float(string='Turnaround Time',compute='calculate_task_progress_yes')
 
-    @api.model
-    def create(self, vals):
-        # assigning the sequence for the record
-        # if vals.get('code', _('New')) == _('New'):
-        res = super(AccountAnalyticLine, self).create(vals)
-        for j in self:
-            # if j.stage_name.name != self.stage_id.name:
-            # 	raise Warning(_('"Please Fill the Stage Name"'))
-            if not j.cost_stage and j.unit_amount:
-                # raise Warning(_('"Please Fill the Cost and Duration"'))
-                print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
+    @api.depends('stage_id')
+    def calculate_progress(self):
+        self.task_progress = 0
+        for self in self:
+            for rec in self.timesheet_ids:
+                if rec.stage_name.lead_time != 0:
+                    company_id = self.env.company.id
+                    resource = self.env['resource.calendar'].search(
+                        [('company_id', '=', company_id), ('company_calendar', '=', True)])
+                    if resource:
+                        print('rec.unit_amountttttttttttttttttttttt', rec.unit_amount)
+                        time_hours = rec.unit_amount / resource.hours_per_day
+                        # print('rec.time_hours',time_hours)
+                        rec.time_hours = rec.time_hours / rec.stage_name.lead_time
+                        rec.task_allocation = rec.stage_name.allocation * rec.time_hours
+        return True
 
-        return res
+    def calculate_task_progress_yes(self):
+        print('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+        self.time_hours = 0
+        self.task_allocation = 0
+        for rec in self:
+            if rec.stage_name.lead_time != 0:
+                company_id = self.env.company.id
+                resource = self.env['resource.calendar'].search([('company_id', '=', company_id), ('company_calendar', '=', True)])
+                if resource:
+                    print('rec.unit_amounttttttttttttttttteeeeeeeettttt', rec.unit_amount)
+                    time_hours = rec.unit_amount / resource.hours_per_day
+                    # print('rec.time_hours',time_hours)
+                    rec.time_hours = time_hours / rec.stage_name.lead_time
+                    rec.task_allocation = rec.stage_name.allocation * rec.time_hours
+        return True
 
 
 # stage_name = fields.Many2one(string="Stage Name", related='task_id.stage_id.name',readonly=True)
@@ -219,14 +240,7 @@ class ProjectTask(models.Model):
         self.task_progress = 0
         for self in self:
             for rec in self.timesheet_ids:
-                if rec.stage_name.lead_time != 0:
-                    company_id = self.env.company.id
-                    resource = self.env['resource.calendar'].search(
-                        [('company_id', '=', company_id), ('company_calendar', '=', True)])
-                    if resource:
-                        time_hours = self.effective_hours / resource.hours_per_day
-                        task_progress = time_hours / rec.stage_name.lead_time
-                        self.task_progress = rec.stage_name.allocation * task_progress
+                self.task_progress += rec.task_allocation
         return True
 
     def write(self, vals):
