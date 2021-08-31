@@ -209,7 +209,7 @@ class HrEmployee(models.Model):
     visa_type = fields.Selection([('residencevisa', 'Residence Visa'), ('tecom', 'Residence Visa TECOM'),('labourcard', 'Labour Card'), ('missionvisa', 'Mission Visa')
                                   , ('nonsponsored', 'Non Sponsored ID Card'), ('parttime', 'Part Time Labour Card'),
                                   ('temporary', 'Temporary Labour Card')], string='Visa Type')
-    ctc = fields.Monetary('CTC', currency_field='currency_id', default=0.0)
+    ctc = fields.Monetary('CTC', currency_field='currency_id', default=0.0,compute="_calculate_ctc")
     allowance = fields.Monetary('Allowances', currency_field='currency_id', default=0.0)
     base_salary = fields.Monetary('Base Salary', currency_field='currency_id', default=0.0)
     basic = fields.Monetary('Basic', currency_field='currency_id', default=0.0)
@@ -232,7 +232,8 @@ class HrEmployee(models.Model):
                                        ], string='Coverage Level')
     insurance_category = fields.Selection([('blue', 'Blue'), ('gold', 'Gold'), ('silver', 'Silver'),('platinum', 'Platinum'),],
                                           string='Insurance Category')
-    employee_status = fields.Char(string='Employee Status')
+    employee_status = fields.Selection([('active', 'Active'), ('inactive', 'Inactive'), ('applicant', 'Applicant'),],
+                                       string='Employee Status')
     ministry_of_labor = fields.Char(string='Ministry Of Labour')
     mol_expiry = fields.Date("MOL Expiry Date")
     labor_card = fields.Char(string='Labour Card NO')
@@ -245,6 +246,12 @@ class HrEmployee(models.Model):
     dl_expiry = fields.Date("DL Expiry Date")
     access_card_expiry = fields.Date("Access Card Expiry Date")
 
+
+    def _calculate_ctc(self):
+        self.ctc = 0
+        for salary in self:
+            salary.ctc = salary.allowance + salary.base_salary + salary.basic + salary.hra + salary.transport + salary.other
+        return True
 
     def _document_count(self):
         for each in self:

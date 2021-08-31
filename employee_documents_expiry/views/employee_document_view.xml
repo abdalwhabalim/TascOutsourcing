@@ -127,13 +127,34 @@
             <xpath expr="//field[@name='passport_id']" position="replace">
                     <field name="passport_id" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='visa_expire']" position="before">
-                    <field name="visa_valid_from" />
-                    <field name="visa_type" />
-
+            <xpath expr="//field[@name='coach_id']" position="replace">
+                    <field name="coach_id" string="Mentor"/>
             </xpath>
-            <xpath expr="//field[@name='name']" position="after">
-                    <field name="emp_id" />
+<!--            <xpath expr="//field[@name='visa_expire']" position="replace">-->
+<!--                    <field name="visa_expire" string="Visa Expiry Date"/>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='phone']" position="replace">
+                    <field name="phone" readonly="0"/>
+            </xpath>
+                <xpath expr="//page[@name='personal_information']//group[@name='work_permit']" position="replace">
+
+                </xpath>
+<!--            <xpath expr="//field[@name='visa_expire']" position="before">-->
+<!--                    <field name="visa_valid_from" />-->
+<!--                    <field name="visa_type" />-->
+
+<!--            </xpath>-->
+            <xpath expr="//field[@name='job_title']" position="before">
+                 <div class="oe_title">
+                     <label for="emp_id"/>
+                            <h1 class="d-flex">
+                                <field name="emp_id" placeholder="Employee ID" />
+                            </h1>
+                        </div>
+<!--                 <label for="emp_id"/>-->
+<!--                        <div>-->
+<!--                            <field name="emp_id" class="oe_inline"/>-->
+<!--                        </div>-->
             </xpath>
             <xpath expr="//page[@name='personal_information']/group" position="after">
                     <group name="fam_ids" colspan="4" string="Coverage Details">
@@ -141,11 +162,12 @@
                     <field name="coverage_category" />
                     <field name="coverage_level" />
                     <field name="insurance_category" />
-                    <field name="employee_status" />
                     </group>
                 </xpath>
             <xpath expr="//field[@name='coach_id']" position="after">
                     <field name="client_name" />
+                                    <field name="employee_status" />
+
             </xpath>
             <xpath expr="//field[@name='resource_calendar_id']" position="after">
                     <field name="date_of_joining" />
@@ -163,13 +185,19 @@
                             <field name="lc_expiry"/>
                             <field name="insurance_card_number"/>
                             <field name="insurance_card_expiry"/>
+                                    <field name="emirates_id"/>
+                            <field name="eid_expiry"/>
                                 </group>
                                 <group>
-                            <field name="emirates_id"/>
-                            <field name="eid_expiry"/>
+
                             <field name="ohc_expiry"/>
                             <field name="dl_expiry"/>
                             <field name="access_card_expiry"/>
+                            <field name="visa_no"/>
+                            <field name="permit_no"/>
+                             <field name="visa_valid_from" />
+                                <field name="visa_type" />
+                                <field name="visa_expire" string="Visa Expiry Date"/>
                                 </group>
                             </group>
 
@@ -182,7 +210,7 @@
                         <sheet>
                             <label for="ctc"/>
                         <div>
-                            <field name="ctc" class="oe_inline"/> per Year
+                            <field name="ctc" class="oe_inline" force_save="1"/> per Year
                             <field name="currency_id" invisible="1"/>
                         </div>
                             <label for="allowance"/>
