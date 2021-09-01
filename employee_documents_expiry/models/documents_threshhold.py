@@ -38,7 +38,7 @@ class DocumentThreshhold(models.Model):
 
     @api.model
     def create(self, vals):
-        doc_count = self.env['document.threshhold'].search([('document_name', '=', vals['document_name'])])
+        doc_count = self.env['document.threshhold'].search([('document_name', '=', vals['document_name']),('form_type', '=', vals['form_type'])])
         if doc_count:
             raise ValidationError(_("Threshold is already entered for the selected document"))
         res = super(DocumentThreshhold, self).create(vals)
