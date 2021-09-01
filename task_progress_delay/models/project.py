@@ -289,7 +289,6 @@ class ProjectTask(models.Model):
         # self.task_progress = 0
         total = 0
         duration = []
-<<<<<<< HEAD
         timesheet_id = []
         for self in self:
             total_duration = 0
@@ -329,7 +328,6 @@ class ProjectTask(models.Model):
                                         rec.check_entered = True
                                         print('elssssssssssssssssssssssssssssse', self.task_progress)
         # return True
-=======
         for self in self:
             total_duration = 0
             for rec in self.timesheet_ids:
@@ -361,36 +359,29 @@ class ProjectTask(models.Model):
                 # else:
                 #     Progress = (Sum(Duration in Days stage) / Turnaroundtimestage)*allocation % age
         return True
->>>>>>> 83938501918ee28eb79a9cf450821fc98bc7aed5
 
     def write(self, vals):
         if vals.get('stage_id', False):
             total_time = 0
             if len(self.timesheet_ids) == 0:
-<<<<<<< HEAD
                 # raise Warning(_('"Please Fill the task cost or Government fee"'))
                 print('nedd')
-=======
                 raise Warning(_('"Please Fill the task cost or Government fee"'))
->>>>>>> 83938501918ee28eb79a9cf450821fc98bc7aed5
             stage_ids = []
             for stage_id in self.timesheet_ids:
                 stage_ids.append(stage_id.stage_name.id)
             for j in self.timesheet_ids:
                 stage_ids.append(j.stage_name.id)
                 if self.stage_id.id not in stage_ids:
-<<<<<<< HEAD
                     # raise Warning(_('"Please Fill the task cost or Government fee"'))
                     print('nedd')
 
                 if j.cost_stage + j.gov_fee == 0:
                     # raise Warning(_('"Please Fill the task cost or Government fee"'))
                     print('nedd')
-=======
                     raise Warning(_('"Please Fill the task cost or Government fee"'))
                 if j.cost_stage + j.gov_fee == 0:
                     raise Warning(_('"Please Fill the task cost or Government fee"'))
->>>>>>> 83938501918ee28eb79a9cf450821fc98bc7aed5
                 if self.stage_id.name == j.stage_name.name:
                     total_time += j.unit_amount
                 history_vals = {
