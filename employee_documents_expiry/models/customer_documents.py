@@ -120,7 +120,7 @@ class CustomerDocument(models.Model):
                     }
                 }
 
-    name = fields.Char(string='Document Number', required=True, copy=False)
+    name = fields.Char(string='Document Number', copy=False)
     # document_name = fields.Many2one('customer.checklist', string='Document Type', required=True)
     description = fields.Text(string='Description', copy=False)
     expiry_date = fields.Date(string='Expiry Date', copy=False)
@@ -128,6 +128,7 @@ class CustomerDocument(models.Model):
     second_reminder_date = fields.Date(string='Second Reminder Date', compute='get_reminder_date')
     third_reminder_date = fields.Date(string='Third Reminder Date', compute='get_reminder_date')
     customer_ref = fields.Many2one('res.partner',string="Customer Name")
+    customer_id = fields.Char(related='customer_ref.cust_id', string='Customer ID')
     customer_name = fields.Char(related='customer_ref.name',string="Customer Name")
     cust_attachment_id = fields.Many2many('ir.attachment', 'cust_attach_rel', 'cust_id3', 'attchc_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
@@ -153,26 +154,29 @@ class CustomerDocument(models.Model):
             document_threshhold = self.env['document.threshhold'].search([('name', '=', i.document_name),
                                                                           ('form_type', '=','customer')])
             for document in document_threshhold:
-                if document_threshhold:
-                    date_format = '%Y-%m-%d'
-                    orig_date = str(i.expiry_date)
-                    dtObj = datetime.strptime(orig_date, date_format)
-                    first_reminder = timedelta(days=int(document.first_reminder_threshold))
-                    second_reminder = timedelta(days=int(document.second_reminder_threshold))
-                    third_reminder = timedelta(days=int(document.third_reminder_threshold))
-                    first_reminder_date = dtObj - first_reminder
-                    second_reminder_date = dtObj - second_reminder
-                    third_reminder_date = dtObj - third_reminder
-                    print('Expiry dateeee', i.expiry_date)
-                    print('days', first_reminder)
-                    print('reminder date', first_reminder_date)
-                    i.first_reminder_date = first_reminder_date
-                    i.second_reminder_date = second_reminder_date
-                    i.third_reminder_date = third_reminder_date
+                if i.expiry_date != False:
+                    if document_threshhold:
+                        date_format = '%Y-%m-%d'
+                        orig_date = str(i.expiry_date)
+                        dtObj = datetime.strptime(orig_date, date_format)
+                        first_reminder = timedelta(days=int(document.first_reminder_threshold))
+                        second_reminder = timedelta(days=int(document.second_reminder_threshold))
+                        third_reminder = timedelta(days=int(document.third_reminder_threshold))
+                        first_reminder_date = dtObj - first_reminder
+                        second_reminder_date = dtObj - second_reminder
+                        third_reminder_date = dtObj - third_reminder
+                        print('Expiry dateeee', i.expiry_date)
+                        print('days', first_reminder)
+                        print('reminder date', first_reminder_date)
+                        i.first_reminder_date = first_reminder_date
+                        i.second_reminder_date = second_reminder_date
+                        i.third_reminder_date = third_reminder_date
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    cust_id = fields.Char(string='Customer ID')
 
     # type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
     customer_def_type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'),
@@ -225,10 +229,20 @@ class ResPartner(models.Model):
         self.ensure_one()
         domain = [
             ('customer_ref', '=', self.id)]
+        cust_obj = self.env['customer.document']
+        reference = cust_obj.search([('customer_ref', '=', self.id)])
+        if reference:
+            cust_id = reference[0].id
+        else:
+            reference = cust_obj.create({
+                "customer_ref": self.id,
+            })
+            cust_id = reference.id
         return {
             'name': _('Documents'),
             'domain': domain,
             'res_model': 'customer.document',
+            'res_id': cust_id,
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',

@@ -19,13 +19,14 @@
                     <group>
                         <group>
                             <field name="customer_ref"/>
-                            <field name="customer_name"/>
+                            <field name="customer_id"/>
+                            <field name="customer_name" invisible="1"/>
 <!--                            <field name="document_name"/>-->
                         </group>
                         <group>
                             <field name="model_name" invisible="1"/>
                             <field name="model_field" />
-                            <field name="document_name"/>
+                            <field name="document_name" invisible="1"/>
                              <field name="name"/>
                             <field name="cust_attachment_id" widget="many2many_binary" class="oe_inline"/>
                             <field name="issue_date"/>
@@ -56,6 +57,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="customer_name"/>
+                <field name="customer_id"/>
                 <field name="name"/>
                 <field name="issue_date"/>
                 <field name="expiry_date"/>
@@ -88,6 +90,14 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+             <xpath expr="//field[@name='type']" position="before">
+                 <div class="oe_title">
+                     <label for="cust_id"/>
+                            <h1 class="d-flex">
+                                <field name="cust_id" placeholder="Customer ID" />
+                            </h1>
+                        </div>
+            </xpath>
             <div class="oe_button_box" position="inside">
                 <button class="oe_stat_button" name="document_view" type="object" icon="fa-list-ol">
                     <field string="Documents" name="document_count" widget="statinfo"/>

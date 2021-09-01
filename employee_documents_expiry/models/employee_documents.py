@@ -147,7 +147,7 @@ class HrEmployeeDocument(models.Model):
                     }
                 }
 
-    name = fields.Char(string='Document Number',required=True)
+    name = fields.Char(string='Document Number',)
     document_name = fields.Many2one('employee.checklist', string='Document Type')
     description = fields.Text(string='Description', copy=False)
     expiry_date = fields.Date(string='Expiry Date', copy=False)
@@ -155,6 +155,7 @@ class HrEmployeeDocument(models.Model):
     second_reminder_date = fields.Date(string='Second Reminder Date', compute='get_reminder_date')
     third_reminder_date = fields.Date(string='Third Reminder Date', compute='get_reminder_date')
     employee_ref = fields.Many2one('hr.employee', copy=False)
+    employee_id = fields.Char(related='employee_ref.emp_id', string='Employee ID')
     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.Date.context_today, copy=False)
@@ -185,21 +186,22 @@ class HrEmployeeDocument(models.Model):
                                                                           ('form_type', '=','employee')])
             for document in document_threshhold:
                 if document_threshhold:
-                    date_format = '%Y-%m-%d'
-                    orig_date = str(i.expiry_date)
-                    dtObj = datetime.strptime(orig_date, date_format)
-                    first_reminder = timedelta(days=int(document.first_reminder_threshold))
-                    second_reminder = timedelta(days=int(document.second_reminder_threshold))
-                    third_reminder = timedelta(days=int(document.third_reminder_threshold))
-                    first_reminder_date = dtObj - first_reminder
-                    second_reminder_date = dtObj - second_reminder
-                    third_reminder_date = dtObj - third_reminder
-                    print('Expiry dateeee',i.expiry_date)
-                    print('days',first_reminder)
-                    print('reminder date',first_reminder_date)
-                    i.first_reminder_date = first_reminder_date
-                    i.second_reminder_date = second_reminder_date
-                    i.third_reminder_date = third_reminder_date
+                    if i.expiry_date != False:
+                        date_format = '%Y-%m-%d'
+                        orig_date = str(i.expiry_date)
+                        dtObj = datetime.strptime(orig_date, date_format)
+                        first_reminder = timedelta(days=int(document.first_reminder_threshold))
+                        second_reminder = timedelta(days=int(document.second_reminder_threshold))
+                        third_reminder = timedelta(days=int(document.third_reminder_threshold))
+                        first_reminder_date = dtObj - first_reminder
+                        second_reminder_date = dtObj - second_reminder
+                        third_reminder_date = dtObj - third_reminder
+                        print('Expiry dateeee',i.expiry_date)
+                        print('days',first_reminder)
+                        print('reminder date',first_reminder_date)
+                        i.first_reminder_date = first_reminder_date
+                        i.second_reminder_date = second_reminder_date
+                        i.third_reminder_date = third_reminder_date
 
 
 class HrEmployee(models.Model):
@@ -267,10 +269,20 @@ class HrEmployee(models.Model):
         self.ensure_one()
         domain = [
             ('employee_ref', '=', self.id)]
+        emp_obj = self.env['hr.employee.document']
+        reference = emp_obj.search([('employee_ref', '=', self.id)])
+        if reference:
+            emmp_id = reference[0].id
+        else:
+            reference = emp_obj.create({
+                "employee_ref": self.id,
+            })
+            emmp_id = reference.id
         return {
             'name': _('Documents'),
             'domain': domain,
             'res_model': 'hr.employee.document',
+            'res_id': emmp_id,
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',

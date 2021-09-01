@@ -109,7 +109,7 @@ class ProjectTask(models.Model):
     task_stage = fields.Char(string="Stage Name", related='stage_id.name')
     type = fields.Selection(
         [('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'), ],
-        string='Type',)
+        string='Type', related='partner_id.customer_def_type')
     task_progress = fields.Float(string="Task Progress",compute='calculate_progress', store=True)
     progress_histogry_ids = fields.One2many('task.progress.history', 'task_id')
     prefix_code = fields.Char(string='Prefix Code')

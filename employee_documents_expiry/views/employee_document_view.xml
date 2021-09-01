@@ -64,7 +64,8 @@
                     <group>
                         <group>
                             <field name="employee_ref"/>
-                            <field name="employee_name"/>
+                            <field name="employee_id"/>
+                            <field name="employee_name" invisible="1"/>
 <!--                            <field name="document_name"/>-->
 <!--                            <field name="employee_ref" invisible="1"/>-->
                         </group>
@@ -72,7 +73,7 @@
                             <field name="model_name" invisible="1"/>
 <!--                            <field name="model_field_name" invisible="1"/>-->
                             <field name="model_field"/>
-                            <field name="document_namee"/>
+                            <field name="document_namee" invisible="1"/>
                             <field name="name"/>
                             <field name="doc_attachment_id" widget="many2many_binary" class="oe_inline"/>
                             <field name="issue_date"/>
@@ -103,6 +104,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="employee_name"/>
+                <field name="employee_id"/>
                 <field name="name"/>
                 <field name="issue_date"/>
                 <field name="expiry_date"/>
