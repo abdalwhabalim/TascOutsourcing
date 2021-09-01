@@ -10,9 +10,10 @@
                     <group>
                         <group>
                             <field name="form_type"/>
-                            <field name="document_part" attrs="{'invisible': [('form_type', '=', 'employee')]}"/>
-                            <field name="document_emp" attrs="{'invisible': [('form_type', '=', 'customer')]}"/>
+<!--                            <field name="document_part" attrs="{'invisible': [('form_type', '=', 'employee')]}"/>-->
+<!--                            <field name="document_emp" attrs="{'invisible': [('form_type', '=', 'customer')]}"/>-->
                             <field name="name" force_save="1" invisible="1"/>
+                             <field name="document_name"/>
                              <field name="first_reminder_threshold"/>
                              <field name="second_reminder_threshold"/>
                              <field name="third_reminder_threshold"/>
@@ -50,6 +51,42 @@
           <field name="view_mode">tree,form</field>
         </record>
 
+    <record id="view_document_master_form" model="ir.ui.view">
+            <field name="name">Document Master Form</field>
+            <field name="model">document.master</field>
+            <field name="arch" type="xml">
+                <form string="Document Master Form">
+                    <sheet>
+                        <group>
+                              <group>
+                                 <field name="document_name"/>
+<!--                                 <field name="form_type"/>-->
+                                 <field name="document_threshhold" invisible="1"/>
+                                           </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+
+    <record id="view_document_master_tree" model="ir.ui.view">
+            <field name="name">Document Master Tree</field>
+            <field name="model">document.master</field>
+            <field name="arch" type="xml">
+                <tree string="Document Master Tree">
+                    <field name="document_name"/>
+<!--                    <field name="form_type"/>-->
+                    </tree>
+            </field>
+     </record>
+
+        <record id="document_master_form_action" model="ir.actions.act_window">
+          <field name="name">Document Master</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">document.master</field>
+          <field name="view_mode">tree,form</field>
+        </record>
+
             <!-- Document Threshhold Master Menu -->
 
 <!--<menuitem id="document_threshhold_details_menu" name="Document Threshhold"-->
@@ -58,6 +95,9 @@
         <menuitem id="master_details_menu_root" name="Documents"  parent="employee_documents_expiry.document_threshhold_details_menu"/>
 <menuitem id="unit_master_details_menu" name="Document Threshhold"  parent="employee_documents_expiry.master_details_menu_root"
           action="document_threshhold_action" sequence="1"/>
+    <menuitem id="document_master_menu" parent="employee_documents_expiry.master_details_menu_root"
+                  name="Document Master" action="document_master_form_action" sequence="2"/>
+
 
 
 

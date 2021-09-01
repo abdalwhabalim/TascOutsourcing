@@ -12,7 +12,7 @@ class DocumentThreshhold(models.Model):
     _name = 'document.threshhold'
     _description = 'Document Threshhold'
     _inherit = ['mail.thread','mail.activity.mixin']
-    _rec_name = 'name'
+    _rec_name = 'document_name'
 
     document_part = fields.Many2one('ir.model.fields', string='Document Type', help="Choose the field",
                                   domain="[('model_id', '=','res.partner')]",
@@ -24,21 +24,34 @@ class DocumentThreshhold(models.Model):
     first_reminder_threshold = fields.Char(string='First Reminder Threshold (in Days)')
     second_reminder_threshold = fields.Char(string='Second Reminder Threshold (in Days)')
     third_reminder_threshold = fields.Char(string='Third Reminder Threshold (in Days)')
+    document_name = fields.Many2one('document.master', string='Document Name')
     form_type = fields.Selection([('customer', "Customer"), ('employee', "Employee")], string="Form Type")
 
     # @api.onchange('form_type')
     def _set_name_emp_part(self):
         for self in self:
             if self.form_type == 'customer':
-                print('fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',self.document_part.field_description)
-                self.name = self.document_part.field_description
+                self.name = self.document_name.document_name
             elif self.form_type == 'employee':
-                self.name = self.document_emp.field_description
+                self.name = self.document_name.document_name
+        return True
 
     @api.model
     def create(self, vals):
-        doc_count = self.env['document.threshhold'].search([('document_part', '=', vals['document_part']),('document_emp', '=', vals['document_emp'])])
+        doc_count = self.env['document.threshhold'].search([('document_name', '=', vals['document_name'])])
         if doc_count:
             raise ValidationError(_("Threshold is already entered for the selected document"))
         res = super(DocumentThreshhold, self).create(vals)
         return res
+
+
+class DocumentMaster(models.Model):
+    _name = 'document.master'
+    _rec_name = 'document_name'
+    _description = 'Document Master'
+
+    document_name = fields.Char(string="Document Name")
+    # form_type = fields.Char([('customer', "Customer"), ('employee', "Employee")], related='document_threshhold.form_type',
+    #                              string="Form Type")
+    document_threshhold = fields.Many2one('document.threshhold', string='Document Threshold')
+

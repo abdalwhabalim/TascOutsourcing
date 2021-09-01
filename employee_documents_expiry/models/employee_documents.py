@@ -177,8 +177,12 @@ class HrEmployeeDocument(models.Model):
     #     #     self.expiry_date = employee_master.
 
     def get_reminder_date(self):
+        self.first_reminder_date = 0
+        self.second_reminder_date = 0
+        self.third_reminder_date = 0
         for i in self:
-            document_threshhold = self.env['document.threshhold'].search([('name', '=', i.document_namee)])
+            document_threshhold = self.env['document.threshhold'].search([('name', '=', i.document_namee),
+                                                                          ('form_type', '=','employee')])
             for document in document_threshhold:
                 if document_threshhold:
                     date_format = '%Y-%m-%d'
@@ -275,7 +279,7 @@ class HrEmployee(models.Model):
                            Click to Create for New Documents
                         </p>'''),
             'limit': 80,
-            'context': "{'default_employee_ref': '%s'}" % self.id
+            # 'context': "{'default_employee_ref': '%s'}" % self.id
         }
 
     document_count = fields.Integer(compute='_document_count', string='# Documents')

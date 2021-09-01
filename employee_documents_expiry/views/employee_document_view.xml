@@ -173,38 +173,36 @@
                     <field name="date_of_joining" />
                     <field name="probation_term_months" />
             </xpath>
-            <xpath expr="//form/sheet/notebook/page[3]" position="after">
-                    <page string="Documents Expiry Details">
-                        <sheet>
-                            <group>
-                                <group>
-                                    <field name="passport_expiry"/>
-                            <field name="ministry_of_labor"/>
-                            <field name="mol_expiry"/>
-                            <field name="labor_card"/>
-                            <field name="lc_expiry"/>
-                            <field name="insurance_card_number"/>
-                            <field name="insurance_card_expiry"/>
-                                    <field name="emirates_id"/>
-                            <field name="eid_expiry"/>
-                                </group>
-                                <group>
+<!--            <xpath expr="//form/sheet/notebook/page[3]" position="after">-->
+<!--                    <page string="Documents Expiry Details">-->
+<!--                        <sheet>-->
+<!--                            <group>-->
+<!--                                <group>-->
+<!--                                    <field name="passport_expiry"/>-->
+<!--                            <field name="ministry_of_labor"/>-->
+<!--                            <field name="mol_expiry"/>-->
+<!--                            <field name="labor_card"/>-->
+<!--                            <field name="lc_expiry"/>-->
+<!--                            <field name="insurance_card_number"/>-->
+<!--                            <field name="insurance_card_expiry"/>-->
+<!--                                    <field name="emirates_id"/>-->
+<!--                            <field name="eid_expiry"/>-->
+<!--                                </group>-->
+<!--                                <group>-->
 
-                            <field name="ohc_expiry"/>
-                            <field name="dl_expiry"/>
-                            <field name="access_card_expiry"/>
-                            <field name="visa_no"/>
-                            <field name="permit_no"/>
-                             <field name="visa_valid_from" />
-                                <field name="visa_type" />
-                                <field name="visa_expire" string="Visa Expiry Date"/>
-                                </group>
-                            </group>
-
-
-                        </sheet>
-                    </page>
-                     </xpath>
+<!--                            <field name="ohc_expiry"/>-->
+<!--                            <field name="dl_expiry"/>-->
+<!--                            <field name="access_card_expiry"/>-->
+<!--                            <field name="visa_no"/>-->
+<!--                            <field name="permit_no"/>-->
+<!--                             <field name="visa_valid_from" />-->
+<!--                                <field name="visa_type" />-->
+<!--                                <field name="visa_expire" string="Visa Expiry Date"/>-->
+<!--                                </group>-->
+<!--                            </group>-->
+<!--                        </sheet>-->
+<!--                    </page>-->
+<!--                     </xpath>-->
             <xpath expr="//form/sheet/notebook/page[3]" position="after">
                     <page string="Salary Details">
                         <sheet>

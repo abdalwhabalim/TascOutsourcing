@@ -146,8 +146,12 @@ class CustomerDocument(models.Model):
 
 
     def get_reminder_date(self):
+        self.first_reminder_date = 0
+        self.second_reminder_date = 0
+        self.third_reminder_date = 0
         for i in self:
-            document_threshhold = self.env['document.threshhold'].search([('name', '=', i.document_name)])
+            document_threshhold = self.env['document.threshhold'].search([('name', '=', i.document_name),
+                                                                          ('form_type', '=','customer')])
             for document in document_threshhold:
                 if document_threshhold:
                     date_format = '%Y-%m-%d'
@@ -233,7 +237,7 @@ class ResPartner(models.Model):
                            Click to Create for New Documents
                         </p>'''),
             'limit': 80,
-            'context': "{'default_customer_ref': '%s'}" % self.id
+            # 'context': "{'default_customer_ref': '%s'}" % self.id
         }
 
     document_count = fields.Integer(compute='_document_count', string='# Documents')

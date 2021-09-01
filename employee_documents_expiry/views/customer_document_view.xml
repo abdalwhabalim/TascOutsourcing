@@ -103,40 +103,39 @@
 <!--                    <field name="property_account_receivable_id" required="0"/>-->
 
 <!--            </xpath>-->
-            <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">
-                    <page string="Documents Expiry Details">
-                        <sheet>
-                            <group>
-                                <group>
-                                    <field name="trade_license_number"/>
-                            <field name="trade_license_issue_date"/>
-                            <field name="trade_license_expiry_date"/>
-                            <field name="naqodi_amwal_expiry"/>
-                            <field name="edirham_card_expiry"/>
-                            <field name="esignature_card_expiry"/>
-                            <field name="establishment_card_expiry"/>
-                                </group>
-                                <group>
-                            <field name="immigration_card_expiry"/>
-                            <field name="custom_card_expiry"/>
-                            <field name="ejari_expiry"/>
-                            <field name="ministry_of_economy_expiry"/>
-                            <field name="chamber_of_commerce_expiry"/>
-                            <field name="iso_certification_issue_date"/>
-                            <field name="iso_certification_expiry"/>
-                            <field name="vat_certificate_issue_date"/>
-                            <field name="vat_certificate_expiry"/>
-                            <field name="mulkiya_issue_date"/>
-                            <field name="mulkiya_expiry"/>
-                            <field name="po_box_expiry"/>
 
-                                </group>
-                            </group>
+<!--            <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">-->
+<!--                    <page string="Documents Expiry Details">-->
+<!--                        <sheet>-->
+<!--                            <group>-->
+<!--                                <group>-->
+<!--                                    <field name="trade_license_number"/>-->
+<!--                            <field name="trade_license_issue_date"/>-->
+<!--                            <field name="trade_license_expiry_date"/>-->
+<!--                            <field name="naqodi_amwal_expiry"/>-->
+<!--                            <field name="edirham_card_expiry"/>-->
+<!--                            <field name="esignature_card_expiry"/>-->
+<!--                            <field name="establishment_card_expiry"/>-->
+<!--                                </group>-->
+<!--                                <group>-->
+<!--                            <field name="immigration_card_expiry"/>-->
+<!--                            <field name="custom_card_expiry"/>-->
+<!--                            <field name="ejari_expiry"/>-->
+<!--                            <field name="ministry_of_economy_expiry"/>-->
+<!--                            <field name="chamber_of_commerce_expiry"/>-->
+<!--                            <field name="iso_certification_issue_date"/>-->
+<!--                            <field name="iso_certification_expiry"/>-->
+<!--                            <field name="vat_certificate_issue_date"/>-->
+<!--                            <field name="vat_certificate_expiry"/>-->
+<!--                            <field name="mulkiya_issue_date"/>-->
+<!--                            <field name="mulkiya_expiry"/>-->
+<!--                            <field name="po_box_expiry"/>-->
 
-
-                        </sheet>
-                    </page>
-                     </xpath>
+<!--                                </group>-->
+<!--                            </group>-->
+<!--                        </sheet>-->
+<!--                    </page>-->
+<!--                     </xpath>-->
             <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="after">
                     <page string="POC Details">
                         <sheet>
