@@ -271,13 +271,10 @@ class HrEmployee(models.Model):
             ('employee_ref', '=', self.id)]
         emp_obj = self.env['hr.employee.document']
         reference = emp_obj.search([('employee_ref', '=', self.id)])
-        if reference:
-            emmp_id = reference[0].id
-        else:
-            reference = emp_obj.create({
-                "employee_ref": self.id,
-            })
-            emmp_id = reference.id
+        reference = emp_obj.create({
+            "employee_ref": self.id,
+        })
+        emmp_id = reference.id
         return {
             'name': _('Documents'),
             'domain': domain,

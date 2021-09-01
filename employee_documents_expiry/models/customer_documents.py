@@ -231,13 +231,16 @@ class ResPartner(models.Model):
             ('customer_ref', '=', self.id)]
         cust_obj = self.env['customer.document']
         reference = cust_obj.search([('customer_ref', '=', self.id)])
-        if reference:
-            cust_id = reference[0].id
-        else:
-            reference = cust_obj.create({
-                "customer_ref": self.id,
-            })
-            cust_id = reference.id
+        # if reference:
+        reference = cust_obj.create({
+            "customer_ref": self.id,
+        })
+        cust_id = reference.id
+        # else:
+        #     reference = cust_obj.create({
+        #         "customer_ref": self.id,
+        #     })
+        #     cust_id = reference.id
         return {
             'name': _('Documents'),
             'domain': domain,
