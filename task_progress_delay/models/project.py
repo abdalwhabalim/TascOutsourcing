@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from datetime import datetime, timedelta
 
+
 class Project(models.Model):
     _inherit = "project.project"
 
@@ -19,6 +20,8 @@ class Project(models.Model):
     sla_in_hours = fields.Float(string='SLA(in hours)')
     turnaround_time_days = fields.Float(string='TurnAround Time(in days)')
     turnaround_time_hours = fields.Float(string='TurnAround Time(in hours)', compute='_get_turnaround_hours')
+    product_id = fields.Many2one('product.template', string="Workflow Product")
+    product_id_govt_fee = fields.Many2one('product.template', string="Product for Government Fee")
 
     def _get_turnaround_hours(self):
         self.turnaround_time_hours = 0
@@ -37,9 +40,9 @@ class AccountAnalyticLine(models.Model):
     stage_name = fields.Many2one('project.task.type', string="Stage Name", domain="[('project_ids', '=', project_id)]")
     cost_stage = fields.Float(string='Tasc Fee')
     gov_fee = fields.Float(string='Government Fee')
-    turn_time = fields.Float(related='stage_name.lead_time',string='Turnaround Time')
-    time_hours = fields.Float(string='Turnaround Time',compute='calculate_task_progress_yes')
-    task_allocation = fields.Float(string='Turnaround Time',compute='calculate_task_progress_yes')
+    turn_time = fields.Float(related='stage_name.lead_time', string='Turnaround Time')
+    time_hours = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
+    task_allocation = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     delay_color = fields.Char(string='Delay Color', compute='calculate_delay_task_report')
 
     def calculate_delay_task_report(self):
@@ -75,7 +78,8 @@ class AccountAnalyticLine(models.Model):
         for rec in self:
             if rec.stage_name.lead_time != 0:
                 company_id = self.env.company.id
-                resource = self.env['resource.calendar'].search([('company_id', '=', company_id), ('company_calendar', '=', True)])
+                resource = self.env['resource.calendar'].search(
+                    [('company_id', '=', company_id), ('company_calendar', '=', True)])
                 if resource:
                     time_hours = rec.unit_amount / resource.hours_per_day
                     # print('rec.time_hours',time_hours)
@@ -93,6 +97,8 @@ class projectTaskType(models.Model):
 
     lead_time = fields.Float('Turnaround Time')
     allocation = fields.Float('Allocation in project')
+    product_id = fields.Many2one('product.template', string="Workflow Product",
+                                 domain=[('categ_id.name', '=', 'Workflow')])
 
 
 class ProjectTask(models.Model):
@@ -102,7 +108,7 @@ class ProjectTask(models.Model):
     task_stage = fields.Char(string="Stage Name", related='stage_id.name')
     type = fields.Selection(
         [('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'), ],
-        string='Type', related='partner_id.customer_def_type')
+        string='Type')
     task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
     progress_histogry_ids = fields.One2many('task.progress.history', 'task_id')
     prefix_code = fields.Char(string='Prefix Code')
@@ -118,12 +124,43 @@ class ProjectTask(models.Model):
     # date_deadline = fields.Datetime(string="Date Deadline", compute='get_date_deadline')
     planned_date_begin = fields.Datetime("Start date")
     planned_date_end = fields.Datetime("End date", store=True)
-    stage_lead_time = fields.Float(related='stage_id.lead_time',string='Stage Turnaround Time')
+    stage_lead_time = fields.Float(related='stage_id.lead_time', string='Stage Turnaround Time')
 
     # @api.onchange('planned_date_end')
     # def _change_deadline(self):
     # 	for i in self:
     # 		i.date_deadline = i.planned_date_end
+
+    def action_create_invoice(self):
+        cost_stage_fee = []
+        govt_stage_fee = []
+        for fee in self.timesheet_ids:
+            cost_stage_fee.append(fee.cost_stage)
+            govt_stage_fee.append(fee.gov_fee)
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.project_id.product_id.id,
+                'quantity': 1,
+                'price_unit': sum(cost_stage_fee),
+            }), (0, 0, {
+                'name': '',
+                'product_id': self.project_id.product_id_govt_fee.id,
+                'quantity': 1,
+                'price_unit': sum(govt_stage_fee)
+            })]
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Invoice',
+            'res_model': 'account.move',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain': [('id', '=', invoice.id)],
+            'res_id': invoice.id,
+            'target': 'current',
+        }
 
     def open_task_report(self):
         timesheet = self.env['account.analytic.line'].search([])
@@ -225,6 +262,7 @@ class ProjectTask(models.Model):
                 'task_code': seq,
             })
         return res
+
     #
     # @api.depends('stage_id')
     # def calculate_progress(self):
@@ -248,19 +286,20 @@ class ProjectTask(models.Model):
     def calculate_progress(self):
         self.task_progress = 0
         total = 0
-        duration=[]
+        duration = []
         for self in self:
             total_duration = 0
             for rec in self.timesheet_ids:
-                print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',self.task_stage)
-                stage_id = self.env['project.task.type'].search([('name', '=', self.task_stage),('project_ids', '=', self.project_id.name)])
+                print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk', self.task_stage)
+                stage_id = self.env['project.task.type'].search(
+                    [('name', '=', self.task_stage), ('project_ids', '=', self.project_id.name)])
                 if rec.stage_name.name == self.task_stage:
-                    print('reccccccccccccccccccccccccccccccccccc',rec.unit_amount)
+                    print('reccccccccccccccccccccccccccccccccccc', rec.unit_amount)
                     # total_duration += rec.unit_amount
                     duration.append(rec.unit_amount)
-                    print('duraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',duration)
+                    print('duraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', duration)
                     total = sum(duration)
-                    print('ttttttttttttttttttttttttttttttttttttttttttttttt',total)
+                    print('ttttttttttttttttttttttttttttttttttttttttttttttt', total)
                     if stage_id:
                         print('stageleadtimeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', stage_id.lead_time)
                         if stage_id.lead_time != 0:
@@ -279,47 +318,31 @@ class ProjectTask(models.Model):
                 # else:
                 #     Progress = (Sum(Duration in Days stage) / Turnaroundtimestage)*allocation % age
         return True
-    # @api.depends('stage_id')
-    # def calculate_progress(self):
-    #     self.task_progress = 0
-    #     # stage=[]
-    #     # duration=[]
-    #     for self in self:
-    #         stage_id = self.env['project.task.type'].search([('name', '=', self.task_stage)])
-    #         for rec in self.timesheet_ids:
-    #             if sum(rec.unit_amount) >= stage_id.leadtime:
-    #                 print('dddddddddddddddddddddddddddddddd',sum(rec.unit_amount))
-    #                 print('dddddddddddddddddddddddddddddddd',stage_id.allocation)
-    #                 self.task_progress = stage_id.allocation
-    #             # else:
-    #             #     Progress = (Sum(Duration in Days stage) / Turnaroundtimestage)*allocation % age
-    #     return True
 
     def write(self, vals):
         if vals.get('stage_id', False):
             total_time = 0
             if len(self.timesheet_ids) == 0:
                 raise Warning(_('"Please Fill the task cost or Government fee"'))
-                print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
+            stage_ids = []
+            for stage_id in self.timesheet_ids:
+                stage_ids.append(stage_id.stage_name.id)
             for j in self.timesheet_ids:
-                if j.cost_stage + j.gov_fee <= 0:
+                stage_ids.append(j.stage_name.id)
+                if vals['stage_id'] not in stage_ids:
+                    raise Warning(_('"Please Fill the task cost or Government fesssssssssse"'))
+                if j.cost_stage + j.gov_fee == 0:
                     raise Warning(_('"Please Fill the task cost or Government fee"'))
-                    print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
-
-                if not j.cost_stage:
-                    # raise Warning(_('"Please Fill the Cost"'))
-                    print('removeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed as its not working')
-
                 if self.stage_id.name == j.stage_name.name:
                     total_time += j.unit_amount
-                    history_vals = {
-                        'stage_from_id': self.stage_id.id,
-                        'stage_to_id': vals['stage_id'],
-                        'task_id': self.id,
-                        'date': fields.Date.today(),
-                        'time_taken': total_time,
-                    }
-                    vals['progress_histogry_ids'] = [(0, 0, history_vals)]
+                history_vals = {
+                    'stage_from_id': self.stage_id.id,
+                    'stage_to_id': vals['stage_id'],
+                    'task_id': self.id,
+                    'date': fields.Date.today(),
+                    'time_taken': total_time,
+                }
+                vals['progress_histogry_ids'] = [(0, 0, history_vals)]
         return super(ProjectTask, self).write(vals)
 
     # def write(self, vals):
