@@ -330,7 +330,7 @@ class ProjectTask(models.Model):
             for j in self.timesheet_ids:
                 stage_ids.append(j.stage_name.id)
                 if vals['stage_id'] not in stage_ids:
-                    raise Warning(_('"Please Fill the task cost or Government fesssssssssse"'))
+                    raise Warning(_('"Please Fill the task cost or Government fee"'))
                 if j.cost_stage + j.gov_fee == 0:
                     raise Warning(_('"Please Fill the task cost or Government fee"'))
                 if self.stage_id.name == j.stage_name.name:
