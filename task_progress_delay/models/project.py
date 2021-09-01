@@ -108,7 +108,7 @@ class ProjectTask(models.Model):
     task_stage = fields.Char(string="Stage Name", related='stage_id.name')
     type = fields.Selection(
         [('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Pay as you go'), ('hybrid', 'Hybrid'), ],
-        string='Type')
+        string='Type', related='partner_id.customer_def_type')
     task_progress = fields.Float(string="Task Progress", default=0.0, compute='calculate_progress')
     progress_histogry_ids = fields.One2many('task.progress.history', 'task_id')
     prefix_code = fields.Char(string='Prefix Code')
@@ -329,9 +329,9 @@ class ProjectTask(models.Model):
                 stage_ids.append(stage_id.stage_name.id)
             for j in self.timesheet_ids:
                 stage_ids.append(j.stage_name.id)
-                if vals['stage_id'] not in stage_ids:
-                    raise Warning(_('"Please Fill the task cost or Government fee"'))
-                if j.cost_stage + j.gov_fee <= 0:
+                if self.stage_id.id not in stage_ids:
+                    raise Warning(_('"Please Fill the task cost or Government fesssssssssse"'))
+                if j.cost_stage + j.gov_fee == 0:
                     raise Warning(_('"Please Fill the task cost or Government fee"'))
                 if self.stage_id.name == j.stage_name.name:
                     total_time += j.unit_amount
