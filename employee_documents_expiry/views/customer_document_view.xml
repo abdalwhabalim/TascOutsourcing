@@ -152,6 +152,8 @@
                             <group>
                                 <group>
                                      <field name="poc_name" />
+                                    <field name="owner_name" />
+                                    
                     <field name="poc_contact_number" />
                     <field name="poc_email" />
                     <field name="location" />
