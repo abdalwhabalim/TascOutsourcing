@@ -377,7 +377,7 @@ class ProjectTask(models.Model):
         for selfs in self:
             for rec in self.timesheet_ids:
                 if rec.unit_amount > 0:
-                    timesheet_id.append(self.stage_id.id)
+                    timesheet_id.append(selfs.stage_id.id)
                     duration.append(rec.unit_amount)
                     check_timsesheet_id.append(rec.stage_name.id)
             for rec in selfs.timesheet_ids:
