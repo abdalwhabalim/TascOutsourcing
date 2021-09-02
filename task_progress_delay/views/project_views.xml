@@ -185,6 +185,7 @@
 
 <!--                                </xpath>-->
                 <xpath expr = "//field[@name='partner_id']" position="after">
+			<field name="employee_id"/>
                     <field name="planned_date_begin"/>
                     <field name="planned_date_end" />
                     <field name="planned_days_project"/>
