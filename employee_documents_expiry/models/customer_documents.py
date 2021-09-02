@@ -182,7 +182,8 @@ class ResPartner(models.Model):
     customer_def_type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'),
                                           ('hybrid', 'Hybrid'),], string='Billing Type')
     manager_license = fields.Char(string='Manager on License')
-    poc_name = fields.Many2one('res.partner', string='POC Name')
+    poc_name = fields.Char(string='POC Name')
+    owner_name = fields.Char(string='Owner Name')
     poc_contact_number = fields.Char(string='POC Contact Number')
     poc_email = fields.Char(string='POC Email id')
     contract_start_date = fields.Date("Contract Start Date")
