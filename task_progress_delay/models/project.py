@@ -127,6 +127,8 @@ class ProjectTask(models.Model):
     planned_date_end = fields.Datetime("End date", store=True)
     stage_lead_time = fields.Float(related='stage_id.lead_time', string='Stage Turnaround Time')
     check_closing_stage = fields.Boolean('Check Closing Stage', default=False, compute='compute_closing_stage')
+    employee_id = fields.Many2one('hr.employee', 'Employee', domain="[('client_name', '=', partner_id)]")
+
 
     # @api.onchange('planned_date_end')
     # def _change_deadline(self):
