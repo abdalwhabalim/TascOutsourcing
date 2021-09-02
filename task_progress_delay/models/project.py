@@ -383,7 +383,7 @@ class ProjectTask(models.Model):
             for rec in selfs.timesheet_ids:
                 stage_ids = self.env['project.task.type'].search([('id', 'in', check_timsesheet_id)])
                 for stage_id in stage_ids:
-                    if rec.stage_name.name == self.task_stage:
+                    if rec.stage_name.name == selfs.task_stage:
                         total = sum(duration)
                         if stage_id:
                             if stage_id.lead_time:
