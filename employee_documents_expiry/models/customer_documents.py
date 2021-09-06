@@ -231,12 +231,12 @@ class ResPartner(models.Model):
         domain = [
             ('customer_ref', '=', self.id)]
         cust_obj = self.env['customer.document']
-        reference = cust_obj.search([('customer_ref', '=', self.id)])
-        # if reference:
-        reference = cust_obj.create({
-            "customer_ref": self.id,
-        })
-        cust_id = reference.id
+        # reference = cust_obj.search([('customer_ref', '=', self.id)])
+        # # if reference:
+        # reference = cust_obj.create({
+        #     "customer_ref": self.id,
+        # })
+        # cust_id = reference.id
         # else:
         #     reference = cust_obj.create({
         #         "customer_ref": self.id,
@@ -246,7 +246,7 @@ class ResPartner(models.Model):
             'name': _('Documents'),
             'domain': domain,
             'res_model': 'customer.document',
-            'res_id': cust_id,
+            # 'res_id': cust_id,
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
@@ -255,7 +255,7 @@ class ResPartner(models.Model):
                            Click to Create for New Documents
                         </p>'''),
             'limit': 80,
-            # 'context': "{'default_customer_ref': '%s'}" % self.id
+            'context': {'default_customer_ref': self.id}
         }
 
     document_count = fields.Integer(compute='_document_count', string='# Documents')

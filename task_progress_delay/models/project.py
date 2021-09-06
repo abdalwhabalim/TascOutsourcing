@@ -38,7 +38,9 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     stage_name = fields.Many2one('project.task.type', string="Stage Name", domain="[('project_ids', '=', project_id)]")
-    cost_stage = fields.Float(string='Tasc Fee')
+    # stage_name = fields.Char(related='project_typeee.name')
+    project_typeee = fields.Many2one('project.task.type', string="Stage Name")
+    cost_stage = fields.Float(string='TASC Fee')
     check_entered = fields.Boolean(string='Check')
     gov_fee = fields.Float(string='Government Fee')
     turn_time = fields.Float(related='stage_name.lead_time', string='Turnaround Time')
@@ -96,6 +98,7 @@ class AccountAnalyticLine(models.Model):
 class projectTaskType(models.Model):
     _inherit = 'project.task.type'
 
+    gov_fee_applicable = fields.Boolean('Govt Fee Applicable')
     lead_time = fields.Float('Turnaround Time')
     allocation = fields.Float('Allocation in project')
     product_id = fields.Many2one('product.template', string="Workflow Product",
@@ -120,7 +123,7 @@ class ProjectTask(models.Model):
     delay_notify = fields.Char(string='Delay Color', compute='calculate_time_delay')
     stage_delay = fields.Char(string='Delay in stage', compute='calculate_stage_delay')
     total_cost = fields.Float(string="Total Cost", default=0.0, compute='calculate_task_cost')
-    total_task_cost = fields.Float(string="Total Tasc Fee", default=0.0, compute='calculate_task_cost')
+    total_task_cost = fields.Float(string="Total TASC Fee", default=0.0, compute='calculate_task_cost')
     total_govt_fee = fields.Float(string="Total Government Fee", default=0.0, compute='calculate_task_cost')
     # date_deadline = fields.Datetime(string="Date Deadline", compute='get_date_deadline')
     planned_date_begin = fields.Datetime("Start date")
@@ -407,17 +410,17 @@ class ProjectTask(models.Model):
     def write(self, vals):
         if vals.get('stage_id', False):
             total_time = 0
-            if len(self.timesheet_ids) == 0:
-                raise Warning(_('"Please Fill the task cost or Government fee"'))
+            # if len(self.timesheet_ids) == 0:
+            #     raise Warning(_('"Please Fill the task cost or Government fee"'))
             stage_ids = []
             for stage_id in self.timesheet_ids:
                 stage_ids.append(stage_id.stage_name.id)
             for j in self.timesheet_ids:
                 stage_ids.append(j.stage_name.id)
-                if self.stage_id.id not in stage_ids:
-                    raise Warning(_('Please ensure that you have entered all relevant costs before moving to the next activity/step'))
-                if j.cost_stage + j.gov_fee == 0:
-                    raise Warning(_('Please ensure that you have entered all relevant costs before moving to the next activity/step'))
+                # if self.stage_id.id not in stage_ids:
+                #     raise Warning(_('Please ensure that you have entered all relevant costs before moving to the next activity/step'))
+                # if j.cost_stage + j.gov_fee == 0:
+                #     raise Warning(_('Please ensure that you have entered all relevant costs before moving to the next activity/step'))
                 if self.stage_id.name == j.stage_name.name:
                     total_time += j.unit_amount
                 history_vals = {

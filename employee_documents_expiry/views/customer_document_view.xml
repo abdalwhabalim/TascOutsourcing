@@ -99,8 +99,8 @@
                         </div>
             </xpath>
             <div class="oe_button_box" position="inside">
-                <button class="oe_stat_button" name="document_view" type="object" icon="fa-list-ol">
-                    <field string="Documents" name="document_count" widget="statinfo"/>
+                <button class="oe_stat_button" string="Documents" name="document_view" type="object" icon="fa-list-ol">
+<!--                    <field string="Documents" name="document_count" widget="statinfo"/>-->
                 </button>
             </div>
             <xpath expr="//field[@name='category_id']" position="after">

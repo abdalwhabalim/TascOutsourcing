@@ -88,6 +88,7 @@
             <field name="inherit_id" ref="project.task_type_edit"/>
             <field name="arch" type="xml">
             	<xpath expr="//field[@name='mail_template_id']" position="after">
+            		<field name="gov_fee_applicable"/>
             		<field name="lead_time"/>
             		<field name="allocation"/>
             		<field name="product_id"/>
@@ -133,6 +134,7 @@
                     <field name="cost_stage"/>
                     <field name="gov_fee"/>
                     <field name="turn_time"/>
+                    <field name='project_typeee' invisible='1'/>
                     <field name='delay_color' invisible='1'/>
                     <field name='check_entered' invisible='1'/>
                 </xpath>

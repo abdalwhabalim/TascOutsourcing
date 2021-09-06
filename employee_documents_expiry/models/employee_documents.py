@@ -271,15 +271,18 @@ class HrEmployee(models.Model):
             ('employee_ref', '=', self.id)]
         emp_obj = self.env['hr.employee.document']
         reference = emp_obj.search([('employee_ref', '=', self.id)])
-        reference = emp_obj.create({
-            "employee_ref": self.id,
-        })
-        emmp_id = reference.id
+        # if reference:
+        #     emmp_id = emp_obj[0].id
+        # else:
+        #     reference = emp_obj.create({
+        #         "employee_ref": self.id,
+        #     })
+        #     emmp_id = reference.id
         return {
             'name': _('Documents'),
             'domain': domain,
             'res_model': 'hr.employee.document',
-            'res_id': emmp_id,
+            # 'res_id': emmp_id,
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
@@ -288,7 +291,7 @@ class HrEmployee(models.Model):
                            Click to Create for New Documents
                         </p>'''),
             'limit': 80,
-            # 'context': "{'default_employee_ref': '%s'}" % self.id
+            'context': {'default_employee_ref': self.id}
         }
 
     document_count = fields.Integer(compute='_document_count', string='# Documents')
