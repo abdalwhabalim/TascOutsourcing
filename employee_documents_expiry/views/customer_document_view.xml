@@ -109,6 +109,9 @@
                     <field name="manager_license" />
 
             </xpath>
+             <xpath expr="//field[@name='vat']" position="after">
+                    <field name="customer_expiry" />
+            </xpath>
 <!--            <xpath expr="//field[@name='property_account_receivable_id']" position="replace">-->
 <!--                    <field name="property_account_receivable_id" required="0"/>-->
 

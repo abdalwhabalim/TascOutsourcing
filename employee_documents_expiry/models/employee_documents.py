@@ -124,16 +124,17 @@ class HrEmployeeDocument(models.Model):
             #     exp_date = a.reminder_date - timedelta(days=7)
             #     # if date_now >= exp_date:
             if a.first_reminder_date == today or a.second_reminder_date == today or a.third_reminder_date == today:
-                mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + "is going to expire on " + \
-                               str(a.expiry_date) + ". Please renew it before expiry date"
-                main_content = {
-                    'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
-                    'author_id': self.env.user.partner_id.id,
-                    'body_html': mail_content,
-                    'email_to': a.employee_ref.work_email,
-                    # 'email_to': i.employee_ref.work_email,
-                }
-                self.env['mail.mail'].create(main_content).send()
+                if a.employee_ref.employee_expiry is True:
+                    mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + " is going to expire on " + \
+                                   str(a.expiry_date) + ". Please renew it before expiry date"
+                    main_content = {
+                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                        'author_id': self.env.user.partner_id.id,
+                        'body_html': mail_content,
+                        'email_to': a.employee_ref.work_email,
+                        # 'email_to': i.employee_ref.work_email,
+                    }
+                    self.env['mail.mail'].create(main_content).send()
 
     @api.onchange('expiry_date')
     def check_expr_date(self):
@@ -207,6 +208,7 @@ class HrEmployeeDocument(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    employee_expiry = fields.Boolean(string='Document Expiry to be notified?')
     client_name = fields.Many2one('res.partner', string='Client Name')
     date_of_joining = fields.Date("Date of Joining")
     passport_expiry = fields.Date("Passport Expiry Date")

@@ -97,16 +97,17 @@ class CustomerDocument(models.Model):
             # if a.reminder_date:
             #     exp_date = a.reminder_date - timedelta(days=7)
             if a.first_reminder_date == today or a.second_reminder_date == today or a.third_reminder_date == today:
-                mail_content = "  Hello  " + a.customer_ref.name + ",Document " + a.name + "is going to expire on " + \
-                               str(a.expiry_date) + ". Please renew it before expiry date"
-                main_content = {
-                    'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
-                    'author_id': self.env.user.partner_id.id,
-                    'body_html': mail_content,
-                    'email_to': a.customer_ref.email,
-                    # 'email_to': i.employee_ref.work_email,
-                }
-                self.env['mail.mail'].create(main_content).send()
+                if a.customer_ref.customer_expiry is True:
+                    mail_content = "  Hello  " + a.customer_ref.name + ",Document " + a.name + " is going to expire on " + \
+                                   str(a.expiry_date) + ". Please renew it before expiry date"
+                    main_content = {
+                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                        'author_id': self.env.user.partner_id.id,
+                        'body_html': mail_content,
+                        'email_to': a.customer_ref.email,
+                        # 'email_to': i.employee_ref.work_email,
+                    }
+                    self.env['mail.mail'].create(main_content).send()
 
     @api.onchange('expiry_date')
     def check_expr_date(self):
@@ -177,7 +178,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     cust_id = fields.Char(string='Customer ID')
-
+    customer_expiry = fields.Boolean(string='Document Expiry to be notified?')
     # type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
     customer_def_type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'),
                                           ('hybrid', 'Hybrid'),], string='Billing Type')
