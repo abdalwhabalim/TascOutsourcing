@@ -178,7 +178,8 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     cust_id = fields.Char(string='Customer ID')
-    customer_expiry = fields.Boolean(string='Document Expiry to be notified?')
+    customer_expiry = fields.Boolean(string='Customer Expiry Document Details to be notified?')
+    employee_expiry = fields.Boolean(string='Employee Expiry Document Details to be notified?')
     # type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
     customer_def_type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'),
                                           ('hybrid', 'Hybrid'),], string='Billing Type')

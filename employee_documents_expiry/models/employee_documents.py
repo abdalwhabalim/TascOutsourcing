@@ -124,7 +124,7 @@ class HrEmployeeDocument(models.Model):
             #     exp_date = a.reminder_date - timedelta(days=7)
             #     # if date_now >= exp_date:
             if a.first_reminder_date == today or a.second_reminder_date == today or a.third_reminder_date == today:
-                if a.employee_ref.employee_expiry is True:
+                if a.employee_ref.client_name.employee_expiry is True:
                     mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + " is going to expire on " + \
                                    str(a.expiry_date) + ". Please renew it before expiry date"
                     main_content = {
@@ -208,7 +208,6 @@ class HrEmployeeDocument(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    employee_expiry = fields.Boolean(string='Document Expiry to be notified?')
     client_name = fields.Many2one('res.partner', string='Client Name')
     date_of_joining = fields.Date("Date of Joining")
     passport_expiry = fields.Date("Passport Expiry Date")

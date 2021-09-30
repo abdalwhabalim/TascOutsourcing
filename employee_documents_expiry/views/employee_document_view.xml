@@ -172,7 +172,6 @@
             <xpath expr="//field[@name='coach_id']" position="after">
                     <field name="client_name" />
                                     <field name="employee_status" />
-                                    <field name="employee_expiry" />
 
             </xpath>
             <xpath expr="//field[@name='resource_calendar_id']" position="after">
