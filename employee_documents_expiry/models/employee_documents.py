@@ -135,6 +135,20 @@ class HrEmployeeDocument(models.Model):
                         # 'email_to': i.employee_ref.work_email,
                     }
                     self.env['mail.mail'].create(main_content).send()
+                    cust_content = "  Hello  " + a.employee_ref.client_name.name + ",Document " + a.name + " for the corresponding Employee " + a.employee_ref.name + " is going to expire on " + \
+                                   str(a.expiry_date) + ". Please renew it before expiry date"
+                    cust_content = {
+                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                        'author_id': self.env.user.partner_id.id,
+                        'body_html': cust_content,
+                        'email_to': a.employee_ref.client_name.email,
+                        # 'email_to': i.employee_ref.work_email,
+                    }
+                    self.env['mail.mail'].create(cust_content).send()
+
+ #    + ",for the corresponding Employee " + \
+ #    a.employee_ref.name + " is going to expire on " + \
+
 
     @api.onchange('expiry_date')
     def check_expr_date(self):
