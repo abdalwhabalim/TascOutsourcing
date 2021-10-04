@@ -8,6 +8,9 @@ from odoo.exceptions import Warning
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from datetime import datetime, timedelta
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from datetime import datetime as dt
+from odoo.exceptions import ValidationError, UserError
 
 
 class Project(models.Model):
@@ -47,6 +50,21 @@ class AccountAnalyticLine(models.Model):
     time_hours = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     task_allocation = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     delay_color = fields.Char(string='Delay Color', compute='calculate_delay_task_report')
+    
+    @api.depends('cost_stage')
+    @api.onchange('cost_stage')
+    def check_value(self):
+        for rec in self:
+            if not 0 < rec.cost_stage < 300:
+                raise ValidationError(_('Enter Value Between 0-300.'))
+
+    @api.depends('gov_fee')
+    @api.onchange('gov_fee')
+    def check_gov_fee(self):
+        for rec in self:
+            if not rec.stage_name.gov_fee_applicable:
+                if rec.gov_fee > 0:
+                    raise ValidationError(_('Government Fee is not Applicable'))
 
     def calculate_delay_task_report(self):
         self.delay_color = 0
@@ -131,6 +149,15 @@ class ProjectTask(models.Model):
     stage_lead_time = fields.Float(related='stage_id.lead_time', string='Stage Turnaround Time')
     check_closing_stage = fields.Boolean('Check Closing Stage', default=False, compute='compute_closing_stage')
     employee_id = fields.Many2one('hr.employee', 'Employee', domain="[('client_name', '=', partner_id)]")
+    
+    @api.onchange('planned_date_begin', 'planned_date_end')
+    def compute_planned_hours(self):
+        for rec in self:
+            if rec.planned_date_begin:
+                if rec.planned_date_end:
+                    diff = (rec.planned_date_end.date() - rec.planned_date_begin.date())
+                    if diff:
+                        rec.planned_hours = float(diff.days)
 
 
     # @api.onchange('planned_date_end')
