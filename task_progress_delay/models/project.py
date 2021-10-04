@@ -52,14 +52,14 @@ class AccountAnalyticLine(models.Model):
     delay_color = fields.Char(string='Delay Color', compute='calculate_delay_task_report')
     
     @api.depends('cost_stage')
-    @api.onchange('cost_stage')
+    @api.constrains('cost_stage')
     def check_value(self):
         for rec in self:
             if not 0 < rec.cost_stage < 300:
                 raise ValidationError(_('Enter Value Between 0-300.'))
 
     @api.depends('gov_fee')
-    @api.onchange('gov_fee')
+    @api.constrains('gov_fee')
     def check_gov_fee(self):
         for rec in self:
             if not rec.stage_name.gov_fee_applicable:
