@@ -50,15 +50,15 @@ class AccountAnalyticLine(models.Model):
     time_hours = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     task_allocation = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     delay_color = fields.Char(string='Delay Color', compute='calculate_delay_task_report')
-    start_dates = fields.Datetime(string="Start Date")
-    end_dates = fields.Datetime(string="End Date")
+    start_dates = fields.Date(string="Start Date", default=fields.Date.context_today)
+    end_dates = fields.Date(string="End Date")
 
     @api.depends('start_dates', 'end_dates')
     @api.onchange('start_dates', 'end_dates')
     def check_unit_amount(self):
         for rec in self:
             if rec.start_dates and rec.end_dates:
-                diff = (rec.end_dates.date() - rec.start_dates.date())
+                diff = (rec.end_dates - rec.start_dates)
                 rec.unit_amount = float(diff.days)
     
     @api.depends('cost_stage')
@@ -160,14 +160,14 @@ class ProjectTask(models.Model):
     check_closing_stage = fields.Boolean('Check Closing Stage', default=False, compute='compute_closing_stage')
     employee_id = fields.Many2one('hr.employee', 'Employee', domain="[('client_name', '=', partner_id)]")
     
-    @api.onchange('planned_date_begin', 'planned_date_end')
-    def compute_planned_hours(self):
-        for rec in self:
-            if rec.planned_date_begin:
-                if rec.planned_date_end:
-                    diff = (rec.planned_date_end.date() - rec.planned_date_begin.date())
-                    if diff:
-                        rec.planned_hours = float(diff.days)
+#     @api.onchange('planned_date_begin', 'planned_date_end')
+#     def compute_planned_hours(self):
+#         for rec in self:
+#             if rec.planned_date_begin:
+#                 if rec.planned_date_end:
+#                     diff = (rec.planned_date_end.date() - rec.planned_date_begin.date())
+#                     if diff:
+#                         rec.planned_hours = float(diff.days)
 
 
     # @api.onchange('planned_date_end')
