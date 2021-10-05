@@ -130,6 +130,8 @@
             <field name="arch" type="xml">
 
                 <xpath expr = "//field[@name='unit_amount']" position="before">
+		    <field name="start_dates"/>
+                    <field name="end_dates"/>
                     <field name="stage_name"/>
                     <field name="cost_stage"/>
                     <field name="gov_fee"/>
@@ -198,7 +200,9 @@
                     <field name="prefix_code" invisible="1"/>
                 </xpath>
 
-				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='name']" position="after">
+		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='name']" position="after">
+		    <field name="start_dates"/>
+                    <field name="end_dates"/>
                     <field name="stage_name"/>
                     <field name="cost_stage"/>
                     <field name="gov_fee"/>
