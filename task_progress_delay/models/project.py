@@ -50,6 +50,16 @@ class AccountAnalyticLine(models.Model):
     time_hours = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     task_allocation = fields.Float(string='Turnaround Time', compute='calculate_task_progress_yes')
     delay_color = fields.Char(string='Delay Color', compute='calculate_delay_task_report')
+    start_dates = fields.Datetime(string="Start Date")
+    end_dates = fields.Datetime(string="End Date")
+
+    @api.depends('start_dates', 'end_dates')
+    @api.onchange('start_dates', 'end_dates')
+    def check_unit_amount(self):
+        for rec in self:
+            if rec.start_dates and rec.end_dates:
+                diff = (rec.end_dates.date() - rec.start_dates.date())
+                rec.unit_amount = float(diff.days)
     
     @api.depends('cost_stage')
     @api.constrains('cost_stage')
