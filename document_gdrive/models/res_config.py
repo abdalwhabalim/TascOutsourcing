@@ -6,7 +6,7 @@
 from odoo import models, fields, api
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     def _document_gdrive_client_id(self):
         icp = self.env['ir.config_parameter'].sudo()

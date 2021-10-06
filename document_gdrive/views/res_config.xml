@@ -10,11 +10,11 @@
 
         <record id="view_general_configuration_inherited" model="ir.ui.view">
             <field name="name">Configure Base Inherited</field>
-            <field name="model">base.config.settings</field>
+            <field name="model">res.config.settings</field>
             <field name="priority" eval="16"/>
-            <field name="inherit_id" ref="base_setup.view_general_configuration" />
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='google_drive']/.." position="after">
+                <xpath expr="//div[@id='module_auth_oauth']" position="after">
                     <div name="google_drive_document">
                         <div name="document_gdrive_upload_dir">
                           <label for="document_gdrive_upload_dir" />

@@ -75,7 +75,7 @@
                             <field name="model_field"/>
                             <field name="document_namee" invisible="1"/>
                             <field name="name"/>
-                            <field name="doc_attachment_id" widget="many2many_binary" class="oe_inline"/>
+                            <field name="doc_attachment_id" widget="gdrive_picker_field" class="oe_inline"/>
                             <field name="issue_date"/>
                             <field name="expiry_date"/>
                             <field name="first_reminder_date" force_save="1"/>
