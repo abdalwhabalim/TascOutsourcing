@@ -209,9 +209,9 @@ class HrEmployeeDocument(models.Model):
                         first_reminder = timedelta(days=int(document.first_reminder_threshold))
                         second_reminder = timedelta(days=int(document.second_reminder_threshold))
                         third_reminder = timedelta(days=int(document.third_reminder_threshold))
-                        first_reminder_date = dtObj + first_reminder
-                        second_reminder_date = dtObj + second_reminder
-                        third_reminder_date = dtObj + third_reminder
+                        first_reminder_date = dtObj - first_reminder
+                        second_reminder_date = dtObj - second_reminder
+                        third_reminder_date = dtObj - third_reminder
                         print('Expiry dateeee',i.expiry_date)
                         print('days',first_reminder)
                         print('reminder date',first_reminder_date)
