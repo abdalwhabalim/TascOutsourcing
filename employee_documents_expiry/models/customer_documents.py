@@ -131,9 +131,9 @@ class CustomerDocument(models.Model):
     customer_ref = fields.Many2one('res.partner',string="Customer Name")
     customer_id = fields.Char(related='customer_ref.cust_id', string='Customer ID')
     customer_name = fields.Char(related='customer_ref.name',string="Customer Name")
-    cust_attachment_id = fields.Char(string="Attachment")
-    # cust_attachment_id = fields.Many2many('ir.attachment', 'cust_attach_rel', 'cust_id3', 'attchc_id3', string="Attachment",
-    #                                      help='You can attach the copy of your document', copy=False)
+    google_attachment_id = fields.Char(string="Google drive Attachment")
+    cust_attachment_id = fields.Many2many('ir.attachment', 'cust_attach_rel', 'cust_id3', 'attchc_id3', string="Attachment",
+                                         help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.Date.context_today, copy=False)
 
     model_name = fields.Many2one('ir.model', help="Choose the model name", string="Model",
@@ -179,8 +179,8 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     cust_id = fields.Char(string='Customer ID')
-    customer_expiry = fields.Boolean(string='Customer Expiry Document Details to be notified?')
-    employee_expiry = fields.Boolean(string='Employee Expiry Document Details to be notified?')
+    customer_expiry = fields.Boolean(string='Notify for Clients documents expiry')
+    employee_expiry = fields.Boolean(string='Notify for Employee documents expiry?')
     # type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'), ('hybrid', 'Hybrid'),], string='Type')
     customer_def_type = fields.Selection([('monthlyretainer', 'Monthly Retainer'), ('payasyougo', 'Per Transaction Pricing'),
                                           ('hybrid', 'Hybrid'),], string='Billing Type')
