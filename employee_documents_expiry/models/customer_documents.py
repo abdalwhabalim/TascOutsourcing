@@ -131,8 +131,9 @@ class CustomerDocument(models.Model):
     customer_ref = fields.Many2one('res.partner',string="Customer Name")
     customer_id = fields.Char(related='customer_ref.cust_id', string='Customer ID')
     customer_name = fields.Char(related='customer_ref.name',string="Customer Name")
-    cust_attachment_id = fields.Many2many('ir.attachment', 'cust_attach_rel', 'cust_id3', 'attchc_id3', string="Attachment",
-                                         help='You can attach the copy of your document', copy=False)
+    cust_attachment_id = fields.Char(string="Attachment")
+    # cust_attachment_id = fields.Many2many('ir.attachment', 'cust_attach_rel', 'cust_id3', 'attchc_id3', string="Attachment",
+    #                                      help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.Date.context_today, copy=False)
 
     model_name = fields.Many2one('ir.model', help="Choose the model name", string="Model",

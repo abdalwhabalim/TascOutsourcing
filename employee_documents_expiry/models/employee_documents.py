@@ -171,8 +171,9 @@ class HrEmployeeDocument(models.Model):
     third_reminder_date = fields.Date(string='Third Reminder Date', compute='get_reminder_date')
     employee_ref = fields.Many2one('hr.employee', copy=False)
     employee_id = fields.Char(related='employee_ref.emp_id', string='Employee ID')
-    doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
-                                         help='You can attach the copy of your document', copy=False)
+    doc_attachment_id = fields.Char(string="Attachment")
+    # doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
+    #                                      help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.Date.context_today, copy=False)
     employee_name = fields.Char(related='employee_ref.name',string="Employee Name")
     model_name = fields.Many2one('ir.model', help="Choose the model name", string="Model",
