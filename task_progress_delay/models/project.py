@@ -131,6 +131,19 @@ class projectTaskType(models.Model):
     allocation = fields.Float('Allocation in project')
     product_id = fields.Many2one('product.template', string="Workflow Product",
                                  domain=[('categ_id.name', '=', 'Workflow')])
+    
+    parallel_task = fields.One2many('project.task', 'stage_id')
+
+    @api.onchange('project_ids')
+    @api.depends('project_ids')
+    def default_getss(self):
+        for rec in self.env['project.task'].search([('project_id', 'in', self.project_ids.ids)]):
+            if rec.stage_id == self.id:
+                vals = [(0, 0, {'name': rec.name,
+                                'planned_hours': rec.planned_hours
+                                })]
+                self.update({'parallel_task': vals})
+        return
 
 
 class ProjectTask(models.Model):
@@ -159,6 +172,34 @@ class ProjectTask(models.Model):
     stage_lead_time = fields.Float(related='stage_id.lead_time', string='Stage Turnaround Time')
     check_closing_stage = fields.Boolean('Check Closing Stage', default=False, compute='compute_closing_stage')
     employee_id = fields.Many2one('hr.employee', 'Employee', domain="[('client_name', '=', partner_id)]")
+    
+    def action_send_emails(self):
+
+        template_id = self.env.ref('task_progress_delay.send_by_mail_project_task').id
+        lang = self.env.context.get('lang')
+        template = self.env['mail.template'].browse(template_id)
+        if template.lang:
+            lang = template._render_lang(self.ids)[self.id]
+        ctx = {
+            'default_model': 'project.task',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+            'custom_layout': "mail.mail_notification_paynow",
+            'force_email': True,
+            'model_description': self.with_context(lang=lang),
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(False, 'form')],
+            'view_id': False,
+            'target': 'new',
+            'context': ctx,
+        }
     
 #     @api.onchange('planned_date_begin', 'planned_date_end')
 #     def compute_planned_hours(self):
