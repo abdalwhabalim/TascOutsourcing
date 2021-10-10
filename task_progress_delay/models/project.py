@@ -66,23 +66,22 @@ class AccountAnalyticLine(models.Model):
     def check_value(self):
         for rec in self:
             if not rec.stage_name.gov_fee_applicable:
-                    raise ValidationError(_('Enter the Government Fee'))
-            else:
-                if rec.gov_fee <= 0:
-                    raise ValidationError(_('Enter the Government Fee'))
-            if rec.gov_fee <= 0:
                 raise ValidationError(_('Enter the Government Fee'))
+            else:
+                if rec.gov_fee > 0:
+                    raise ValidationError(_('Enter the Government Fee'))
+
             if rec.cost_stage:
                 if not 0 <= rec.cost_stage < 300:
                     raise ValidationError(_('Enter Value Between 0-300.'))
 
-    @api.depends('gov_fee')
-    @api.constrains('gov_fee')
-    def check_gov_fee(self):
-        for rec in self:
-            if not rec.stage_name.gov_fee_applicable:
-                if rec.gov_fee > 0:
-                    raise ValidationError(_('Enter the Government Fee'))
+#     @api.depends('gov_fee')
+#     @api.constrains('gov_fee')
+#     def check_gov_fee(self):
+#         for rec in self:
+#             if not rec.stage_name.gov_fee_applicable:
+#                 if rec.gov_fee > 0:
+#                     raise ValidationError(_('Enter the Government Fee'))
 
     def calculate_delay_task_report(self):
         self.delay_color = 0
