@@ -61,15 +61,17 @@ class AccountAnalyticLine(models.Model):
                 diff = (rec.end_dates - rec.start_dates)
                 rec.unit_amount = float(diff.days)
     
-    @api.depends('cost_stage')
-    @api.constrains('cost_stage')
+    @api.depends('cost_stage', 'gov_fee')
+    @api.constrains('cost_stage', 'gov_fee')
     def check_value(self):
         for rec in self:
             if rec.cost_stage:
                 if not rec.stage_name.gov_fee_applicable:
-                    raise ValidationError(_('Government Fee is not Applicable'))
+                        raise ValidationError(_('Government Fee is not Applicable'))
                 if not 0 <= rec.cost_stage < 300:
                     raise ValidationError(_('Enter Value Between 0-300.'))
+
+                    
     @api.depends('gov_fee')
     @api.constrains('gov_fee')
     def check_gov_fee(self):
