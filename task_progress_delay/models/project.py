@@ -69,7 +69,7 @@ class AccountAnalyticLine(models.Model):
                 raise ValidationError(_('Enter the Government Fee'))
             else:
                 if rec.stage_name.gov_fee_applicable:
-                    if rec.gov_fee > 0:
+                    if rec.gov_fee < 0:
                         raise ValidationError(_('Enter the Government Fee'))
             if rec.cost_stage:
                 if not 0 <= rec.cost_stage < 300:
