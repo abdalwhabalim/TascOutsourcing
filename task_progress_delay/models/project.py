@@ -65,10 +65,11 @@ class AccountAnalyticLine(models.Model):
     @api.constrains('cost_stage')
     def check_value(self):
         for rec in self:
-            if not rec.stage_name.gov_fee_applicable:
+            if rec.cost_stage:
+                if not rec.stage_name.gov_fee_applicable:
+                    raise ValidationError(_('Government Fee is not Applicable'))
                 if not 0 <= rec.cost_stage < 300:
                     raise ValidationError(_('Enter Value Between 0-300.'))
-
     @api.depends('gov_fee')
     @api.constrains('gov_fee')
     def check_gov_fee(self):
