@@ -66,7 +66,8 @@ class AccountAnalyticLine(models.Model):
     def check_value(self):
         for rec in self:
             if not rec.stage_name.gov_fee_applicable:
-                raise ValidationError(_('Enter the Government Fee'))
+                if rec.gov_fee > 0:
+                    raise ValidationError(_('Enter the Government Fee'))
             else:
                 if rec.stage_name.gov_fee_applicable:
                     if rec.gov_fee < 0:
