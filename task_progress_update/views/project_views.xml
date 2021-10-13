@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr = "//field[@name='partner_id']" position="after">
-                    <field name="check_task_closed" invisible="1"/>
+                    <field name="check_task_closed"/>
                 </xpath>
 
 				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="replace">
