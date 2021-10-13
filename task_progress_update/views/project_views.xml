@@ -31,8 +31,8 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
 
-                <xpath expr = "//field[@name='partner_id']" position="after">
-                    <field name="check_task_closed"/>
+                <xpath expr = "//field[@name='task_progress']" position="after">
+                    <field name="check_task_closed" />
                 </xpath>
 
 				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="replace">
@@ -56,7 +56,7 @@
                 </field>
 
 				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
-                    <field name="check_entered" force_save="1" />
+                    <field name="check_entered" invisible="1" force_save="1" />
                     <field name='end_date_boolean' attrs="{'invisible': [('check_entered', '!=', True)]}"/>
                 </xpath>
 
@@ -72,6 +72,10 @@
                     <attribute name="decoration-success">green_boolean == True</attribute>
                     <attribute name="decoration-warning">amber_boolean == True</attribute>
                 </xpath>
+                <group name="project_hours" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </group>
+
             </field>
         </record>
 
