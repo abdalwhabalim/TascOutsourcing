@@ -22,9 +22,9 @@ class projectTaskType(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    check_entered = fields.Boolean(related='stage_name.is_closed', string='Is Close Stage')
-    end_date_boolean = fields.Boolean('End Stage', default=False)
-    is_start_stages = fields.Boolean(related='stage_name.is_start_stage', string='Is Start Stage')
+    check_entered = fields.Boolean(related='stage_name.is_closed', string='Close Stage')
+    end_date_boolean = fields.Boolean(related='stage_name.is_closed', string='End Stage', default=False)
+    is_start_stages = fields.Boolean(related='stage_name.is_start_stage', string='Start Stage')
     red_boolean = fields.Boolean(string='Red Boolean', compute='compute_red_boolean')
     green_boolean = fields.Boolean(string='green Boolean', compute='compute_green_boolean')
     amber_boolean = fields.Boolean(string='amber Boolean', compute='compute_amber_boolean')
