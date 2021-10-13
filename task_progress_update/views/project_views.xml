@@ -2,7 +2,7 @@
 
 <odoo>
 	<data>
-		<record id="account_analytic_line_job_trrree" model="ir.ui.view">
+	<record id="account_analytic_line_job_trrree" model="ir.ui.view">
             <field name="name">account.analytic.line.inherit tree</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
@@ -35,27 +35,27 @@
                     <field name="check_task_closed" />
                 </xpath>
 
-				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="replace">
+		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="replace">
                     <field name="unit_amount" string="Actual Days" optional="show" sum="Total" decoration-danger="unit_amount &gt; 24"/>
                 </xpath>
-				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='turn_time']" position="attributes">
+		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='turn_time']" position="attributes">
                     <attribute name="string">
                         Activity SLA
                     </attribute>
                 </xpath>
-				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='end_dates']" position="attributes">
+		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='end_dates']" position="attributes">
                     <attribute name="string">
                         Completion Date
                     </attribute>
                 </xpath>
 
-				<field name="timesheet_ids" position="attributes">
+		<field name="timesheet_ids" position="attributes">
                     <attribute name="attrs">
                         {'readonly': [('check_task_closed', '=', True)]}
                     </attribute>
                 </field>
 
-				<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
+		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
                     <field name="check_entered" invisible="1" force_save="1" />
                     <field name='end_date_boolean' attrs="{'invisible': [('check_entered', '!=', True)]}"/>
                 </xpath>
@@ -75,7 +75,6 @@
                 <group name="project_hours" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </group>
-
             </field>
         </record>
 
