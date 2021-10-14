@@ -16,6 +16,9 @@
         'views/employee_document_view.xml',
         'views/customer_document_view.xml',
         'views/customer_checklist_view.xml',
+        'data/customer_reminder.xml',
+        'data/employee_reminder.xml',
+
     ],
     'demo': ['data/data.xml'],
     'images': ['static/description/banner.png'],

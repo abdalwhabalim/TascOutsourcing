@@ -21,11 +21,13 @@
                             <field name="customer_ref"/>
                             <field name="customer_id"/>
                             <field name="customer_name" invisible="1"/>
+<!--                            <field name="company_id" invisible="1"/>-->
 <!--                            <field name="document_name"/>-->
                         </group>
                         <group>
                             <field name="model_name" invisible="1"/>
                             <field name="model_field" />
+                            <field name="aging_date" invisible="1"/>
                             <field name="document_name" invisible="1"/>
                              <field name="name"/>
                             <field name="google_attachment_id" widget="gdrive_picker_field" class="oe_inline"/>

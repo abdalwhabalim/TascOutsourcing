@@ -157,6 +157,9 @@ class projectTaskType(models.Model):
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
+    monthly_billing_amount = fields.Monetary(string='Monthly Billing Amount')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, help="Currency",
+                                  default=lambda self: self.env.user.company_id.currency_id)
     task_code = fields.Char(string="Task Number")
     task_stage = fields.Char(string="Stage Name", related='stage_id.name')
     type = fields.Selection(
@@ -180,7 +183,16 @@ class ProjectTask(models.Model):
     stage_lead_time = fields.Float(related='stage_id.lead_time', string='Stage Turnaround Time')
     check_closing_stage = fields.Boolean('Check Closing Stage', default=False, compute='compute_closing_stage')
     employee_id = fields.Many2one('hr.employee', 'Employee', domain="[('client_name', '=', partner_id)]")
-    
+
+    # def fields_get(self, fields=None):
+    #     res = super(ProjectTask, self).fields_get()
+    #     fields_to_hide = ['total_task_cost', 'total_govt_fee']
+    #     for field in fields_to_hide:
+    #         if res.get(field):
+    #             res.get(field)['searchable'] = True  # hide from filter
+    #             # res.get(field)['sortable'] = True  # hide from group by
+    #     return res
+
     def action_send_emails(self):
 
         template_id = self.env.ref('task_progress_delay.send_by_mail_project_task').id
@@ -313,7 +325,8 @@ class ProjectTask(models.Model):
             tasks = self.env['account.analytic.line'].search([('task_id', '=', rec.id)])
             if tasks:
                 for task in tasks:
-                    rec.total_task_cost += task.cost_stage
+                    if rec.type != 'monthlyretainer':
+                        rec.total_task_cost += task.cost_stage
                     rec.total_govt_fee += task.gov_fee
                     rec.total_cost = rec.total_task_cost + rec.total_govt_fee
 

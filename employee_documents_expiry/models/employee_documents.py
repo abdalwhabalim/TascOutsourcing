@@ -69,16 +69,36 @@ class HrEmployeeDocument(models.Model):
                             'user_id': document_ids.id,
                         })
                         schedule_activity.action_close_dialog()
-                        mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
-                                       str(i.expiry_date) + ". Please renew it before expiry date"
-                        main_content = {
-                            'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
-                            'author_id': self.env.user.partner_id.id,
-                            'body_html': mail_content,
-                            'email_to': document_ids.login,
-                            # 'email_to': i.employee_ref.work_email,
-                        }
-                        self.env['mail.mail'].create(main_content).send()
+                        template_id = self.env['ir.model.data'].get_object_reference(
+                            'employee_documents_expiry',
+                            'email_template_employee')[1]
+                        if template_id:
+                            email_template_obj = self.env['mail.template'].browse(template_id)
+                            values = email_template_obj.generate_email(i.id, ['subject', 'body_html', 'email_from',
+                                                                              'email_to', 'partner_to', 'email_cc',
+                                                                              'reply_to',
+                                                                              'scheduled_date'])
+                            i.aging_date = i.model_field.first_reminder_threshold
+                            # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
+                            #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
+                            #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
+                            values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                            values['email_to'] = document_ids.login
+                            # values['body_html'] = mail_content
+                            # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
+                            msg_id = self.env['mail.mail'].create(values)
+                            if msg_id:
+                                msg_id._send()
+                        # mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
+                        #                str(i.expiry_date) + ". Please renew it before expiry date"
+                        # main_content = {
+                        #     'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
+                        #     'author_id': self.env.user.partner_id.id,
+                        #     'body_html': mail_content,
+                        #     'email_to': document_ids.login,
+                        #     # 'email_to': i.employee_ref.work_email,
+                        # }
+                        # self.env['mail.mail'].create(main_content).send()
                     elif i.second_reminder_date == today:
                         schedule_activity = self.env['mail.activity'].create({
                             'note': (('Second Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
@@ -89,16 +109,26 @@ class HrEmployeeDocument(models.Model):
                             'user_id': document_ids.id,
                         })
                         schedule_activity.action_close_dialog()
-                        mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
-                                       str(i.expiry_date) + ". Please renew it before expiry date"
-                        main_content = {
-                            'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
-                            'author_id': self.env.user.partner_id.id,
-                            'body_html': mail_content,
-                            'email_to': document_ids.login,
-                            # 'email_to': i.employee_ref.work_email,
-                        }
-                        self.env['mail.mail'].create(main_content).send()
+                        template_id = self.env['ir.model.data'].get_object_reference(
+                            'employee_documents_expiry',
+                            'email_template_employee')[1]
+                        if template_id:
+                            email_template_obj = self.env['mail.template'].browse(template_id)
+                            values = email_template_obj.generate_email(i.id, ['subject', 'body_html', 'email_from',
+                                                                              'email_to', 'partner_to', 'email_cc',
+                                                                              'reply_to',
+                                                                              'scheduled_date'])
+                            i.aging_date = i.model_field.first_reminder_threshold
+                            # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
+                            #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
+                            #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
+                            values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                            values['email_to'] = document_ids.login
+                            # values['body_html'] = mail_content
+                            # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
+                            msg_id = self.env['mail.mail'].create(values)
+                            if msg_id:
+                                msg_id._send()
                     elif i.third_reminder_date == today:
                         schedule_activity = self.env['mail.activity'].create({
                             'note': (('Third Reminder notification for the expiry of %s Document') % (i.employee_ref.name)),
@@ -109,42 +139,88 @@ class HrEmployeeDocument(models.Model):
                             'user_id': document_ids.id,
                         })
                         schedule_activity.action_close_dialog()
-                        mail_content = "  Hello  " + i.employee_ref.name + ",Document " + i.name + "is going to expire on " + \
-                                       str(i.expiry_date) + ". Please renew it before expiry date"
-                        main_content = {
-                            'subject': _('Document-%s Expired On %s') % (i.name, i.expiry_date),
-                            'author_id': self.env.user.partner_id.id,
-                            'body_html': mail_content,
-                            'email_to': document_ids.login,
-                            # 'email_to': i.employee_ref.work_email,
-                        }
-                        self.env['mail.mail'].create(main_content).send()
+                        template_id = self.env['ir.model.data'].get_object_reference(
+                            'employee_documents_expiry',
+                            'email_template_employee')[1]
+                        if template_id:
+                            email_template_obj = self.env['mail.template'].browse(template_id)
+                            values = email_template_obj.generate_email(i.id, ['subject', 'body_html', 'email_from',
+                                                                              'email_to', 'partner_to', 'email_cc',
+                                                                              'reply_to',
+                                                                              'scheduled_date'])
+                            i.aging_date = i.model_field.first_reminder_threshold
+                            # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
+                            #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
+                            #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
+                            values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                            values['email_to'] = document_ids.login
+                            # values['body_html'] = mail_content
+                            # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
+                            msg_id = self.env['mail.mail'].create(values)
+                            if msg_id:
+                                msg_id._send()
         for a in match:
             # if a.reminder_date:
             #     exp_date = a.reminder_date - timedelta(days=7)
             #     # if date_now >= exp_date:
             if a.first_reminder_date == today or a.second_reminder_date == today or a.third_reminder_date == today:
                 if a.employee_ref.client_name.employee_expiry is True:
-                    mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + " is going to expire on " + \
-                                   str(a.expiry_date) + ". Please renew it before expiry date"
-                    main_content = {
-                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
-                        'author_id': self.env.user.partner_id.id,
-                        'body_html': mail_content,
-                        'email_to': a.employee_ref.work_email,
-                        # 'email_to': i.employee_ref.work_email,
-                    }
-                    self.env['mail.mail'].create(main_content).send()
-                    cust_content = "  Hello  " + a.employee_ref.client_name.name + ",Document " + a.name + " for the corresponding Employee " + a.employee_ref.name + " is going to expire on " + \
-                                   str(a.expiry_date) + ". Please renew it before expiry date"
-                    cust_content = {
-                        'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
-                        'author_id': self.env.user.partner_id.id,
-                        'body_html': cust_content,
-                        'email_to': a.employee_ref.client_name.email,
-                        # 'email_to': i.employee_ref.work_email,
-                    }
-                    self.env['mail.mail'].create(cust_content).send()
+                    template_id = self.env['ir.model.data'].get_object_reference(
+                        'employee_documents_expiry',
+                        'email_template_employee')[1]
+                    if template_id:
+                        email_template_obj = self.env['mail.template'].browse(template_id)
+                        values = email_template_obj.generate_email(a.id, ['subject', 'body_html', 'email_from',
+                                                                          'email_to', 'partner_to', 'email_cc',
+                                                                          'reply_to',
+                                                                          'scheduled_date'])
+                        values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                        values['email_to'] = a.employee_ref.work_email
+                        # values['body_html'] = mail_content
+                        # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
+                        msg_id = self.env['mail.mail'].create(values)
+                        if msg_id:
+                            msg_id._send()
+                    template_id = self.env['ir.model.data'].get_object_reference(
+                        'employee_documents_expiry',
+                        'email_template_employee')[1]
+                    if template_id:
+                        email_template_obj = self.env['mail.template'].browse(template_id)
+                        values = email_template_obj.generate_email(i.id, ['subject', 'body_html', 'email_from',
+                                                                          'email_to', 'partner_to', 'email_cc',
+                                                                          'reply_to',
+                                                                          'scheduled_date'])
+                        i.aging_date = i.model_field.first_reminder_threshold
+                        # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
+                        #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
+                        #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
+                        values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                        values['email_to'] = a.employee_ref.client_name.email
+                        # values['body_html'] = mail_content
+                        # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
+                        msg_id = self.env['mail.mail'].create(values)
+                        if msg_id:
+                            msg_id._send()
+                    # mail_content = "  Hello  " + a.employee_ref.name + ",Document " + a.name + " is going to expire on " + \
+                    #                str(a.expiry_date) + ". Please renew it before expiry date"
+                    # main_content = {
+                    #     'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                    #     'author_id': self.env.user.partner_id.id,
+                    #     'body_html': mail_content,
+                    #     'email_to': a.employee_ref.work_email,
+                    #     # 'email_to': i.employee_ref.work_email,
+                    # }
+                    # self.env['mail.mail'].create(main_content).send()
+                    # cust_content = "  Hello  " + a.employee_ref.client_name.name + ",Document " + a.name + " for the corresponding Employee " + a.employee_ref.name + " is going to expire on " + \
+                    #                str(a.expiry_date) + ". Please renew it before expiry date"
+                    # cust_content = {
+                    #     'subject': _('Document-%s Expired On %s') % (a.name, a.expiry_date),
+                    #     'author_id': self.env.user.partner_id.id,
+                    #     'body_html': cust_content,
+                    #     'email_to': a.employee_ref.client_name.email,
+                    #     # 'email_to': i.employee_ref.work_email,
+                    # }
+                    # self.env['mail.mail'].create(cust_content).send()
 
  #    + ",for the corresponding Employee " + \
  #    a.employee_ref.name + " is going to expire on " + \
@@ -183,6 +259,7 @@ class HrEmployeeDocument(models.Model):
     #                               required=True, ondelete='cascade')
     model_field = fields.Many2one('document.threshhold',string='Document Type',domain="[('form_type', '=','employee')]")
     document_namee = fields.Char(string='Document Name', related='model_field.name',readonly=True)
+    aging_date = fields.Char(string='First Reminder Date',compute='get_ageing_date')
 
     # @api.onchange('document_namee')
     # def _get_expiry_date(self):
@@ -192,6 +269,19 @@ class HrEmployeeDocument(models.Model):
     #             print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',i.name)
     #     # if employee_master:
     #     #     self.expiry_date = employee_master.
+
+
+    def get_ageing_date(self):
+        self.aging_date = 0
+        today = fields.Date.today()
+        for i in self:
+            if i.first_reminder_date == today:
+                i.aging_date = i.model_field.first_reminder_threshold
+            elif i.second_reminder_date == today:
+                i.aging_date = i.model_field.second_reminder_threshold
+            elif i.third_reminder_date == today:
+                i.aging_date = i.model_field.third_reminder_threshold
+
 
     def get_reminder_date(self):
         self.first_reminder_date = 0
