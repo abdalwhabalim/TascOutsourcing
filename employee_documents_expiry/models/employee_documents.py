@@ -190,7 +190,6 @@ class HrEmployeeDocument(models.Model):
                                                                           'email_to', 'partner_to', 'email_cc',
                                                                           'reply_to',
                                                                           'scheduled_date'])
-                        i.aging_date = i.model_field.first_reminder_threshold
                         # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
                         #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
                         #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
