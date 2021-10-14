@@ -186,7 +186,7 @@ class HrEmployeeDocument(models.Model):
                         'email_template_employee')[1]
                     if template_id:
                         email_template_obj = self.env['mail.template'].browse(template_id)
-                        values = email_template_obj.generate_email(i.id, ['subject', 'body_html', 'email_from',
+                        values = email_template_obj.generate_email(a.id, ['subject', 'body_html', 'email_from',
                                                                           'email_to', 'partner_to', 'email_cc',
                                                                           'reply_to',
                                                                           'scheduled_date'])
