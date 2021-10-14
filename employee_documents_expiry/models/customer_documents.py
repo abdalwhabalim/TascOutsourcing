@@ -207,9 +207,9 @@ class CustomerDocument(models.Model):
     # document_name = fields.Char(string='Document Name', related='model_field.field_description',readonly=True)
     model_field = fields.Many2one('document.threshhold', string='Document Type',domain="[('form_type', '=','customer')]")
     document_name = fields.Char(string='Document Name', related='model_field.name', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False, help="Company",
-                                 default=lambda self: self.env['res.company']._company_default_get(),
-                                 states={'draft': [('readonly', False)]})
+    # company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False, help="Company",
+    #                              default=lambda self: self.env['res.company']._company_default_get(),
+    #                              states={'draft': [('readonly', False)]})
 
     def get_ageing_date(self):
         self.aging_date = 0

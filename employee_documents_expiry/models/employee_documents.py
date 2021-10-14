@@ -259,9 +259,9 @@ class HrEmployeeDocument(models.Model):
     model_field = fields.Many2one('document.threshhold',string='Document Type',domain="[('form_type', '=','employee')]")
     document_namee = fields.Char(string='Document Name', related='model_field.name',readonly=True)
     aging_date = fields.Char(string='First Reminder Date',compute='get_ageing_date')
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False, help="Company",
-                                 default=lambda self: self.env['res.company']._company_default_get(),
-                                 states={'draft': [('readonly', False)]})
+    # company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False, help="Company",
+    #                              default=lambda self: self.env['res.company']._company_default_get(),
+    #                              states={'draft': [('readonly', False)]})
     # @api.onchange('document_namee')
     # def _get_expiry_date(self):
     #     # employee_master = self.env['hr.employee'].search([('field_description', '=', self.document_namee)])
