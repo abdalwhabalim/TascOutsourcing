@@ -82,7 +82,7 @@ class HrEmployeeDocument(models.Model):
                             # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
                             #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
                             #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
-                            values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                            # values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
                             values['email_to'] = document_ids.login
                             # values['body_html'] = mail_content
                             # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
@@ -122,7 +122,7 @@ class HrEmployeeDocument(models.Model):
                             # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
                             #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
                             #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
-                            values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                            # values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
                             values['email_to'] = document_ids.login
                             # values['body_html'] = mail_content
                             # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
@@ -152,7 +152,7 @@ class HrEmployeeDocument(models.Model):
                             # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
                             #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
                             #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
-                            values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                            # values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
                             values['email_to'] = document_ids.login
                             # values['body_html'] = mail_content
                             # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
@@ -174,7 +174,7 @@ class HrEmployeeDocument(models.Model):
                                                                           'email_to', 'partner_to', 'email_cc',
                                                                           'reply_to',
                                                                           'scheduled_date'])
-                        values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                        # values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
                         values['email_to'] = a.employee_ref.work_email
                         # values['body_html'] = mail_content
                         # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
@@ -193,7 +193,7 @@ class HrEmployeeDocument(models.Model):
                         # mail_content = '<p> Greetings from TASC!! <br></br> <br></br>Please be informed that below employee is about to expiry in ' + i.first_reminder_threshhold + 'days' +\
                         #                '<br></br><b>Please review the below to take necessary action to renew the </b>'+ i.name + \
                         #                'Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document."</p>'
-                        values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
+                        # values['email_from'] = self.env['res.users'].browse(self.env.uid).company_id.email
                         values['email_to'] = a.employee_ref.client_name.email
                         # values['body_html'] = mail_content
                         # values['subject'] = _('Reshmi Document-%s Expired On %s') % (i.name, i.expiry_date),
@@ -259,7 +259,9 @@ class HrEmployeeDocument(models.Model):
     model_field = fields.Many2one('document.threshhold',string='Document Type',domain="[('form_type', '=','employee')]")
     document_namee = fields.Char(string='Document Name', related='model_field.name',readonly=True)
     aging_date = fields.Char(string='First Reminder Date',compute='get_ageing_date')
-
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False, help="Company",
+                                 default=lambda self: self.env['res.company']._company_default_get(),
+                                 states={'draft': [('readonly', False)]})
     # @api.onchange('document_namee')
     # def _get_expiry_date(self):
     #     # employee_master = self.env['hr.employee'].search([('field_description', '=', self.document_namee)])
