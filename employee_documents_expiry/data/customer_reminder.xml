@@ -12,10 +12,10 @@
             <field name="body_html"><![CDATA[
                 <div class="page">
                     <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-                        <p> Greetings from TASC!!<br></br><br></br>
+                        <p> Greetings from TASC!!<br></br>
                         Please be informed that below Client ${object.model_field.name} is about to expiry in ${object.aging_date} days.<br></br>
-                        <br></br><b>Please review the below to take necessary action to renew the ${object.model_field.name} .</b><br></br>
-                        <br></br>Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document.</p>
+                        <b>Please review the below to take necessary action to renew the ${object.model_field.name} .</b><br></br>
+                       Please write to projects@tascoutsourcing.com for any further assistance on renewal of the document.</p>
                     </div>
                     <div>
                          <table class="table table-bordered" style="border: 1px solid black;">
@@ -46,9 +46,9 @@
                        </table>
                        <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
                         <p>
-Looking forward for your support and cooperation.<br></br><br></br>
-(In case if you have already started the renewal process of the document, please ignore this email)<br></br><br></br>
-Thanks and Regards<br></br><br></br>
+Looking forward for your support and cooperation.<br></br>
+(In case if you have already started the renewal process of the document, please ignore this email)<br></br>
+Thanks and Regards<br></br>
 TASC Team </p>
                     </div>
                     </div>
