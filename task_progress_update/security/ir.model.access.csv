@@ -1,1 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_workflow_config,workflow_config,task_progress_update.model_workflow_config,,1,1,1,1,
+access_workflow_line,workflow_line,task_progress_update.model_workflow_line,,1,1,1,1,

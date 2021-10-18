@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
-	<data>
-	<record id="account_analytic_line_job_trrree" model="ir.ui.view">
+    <data>
+        <record id="account_analytic_line_job_trrree" model="ir.ui.view">
             <field name="name">account.analytic.line.inherit tree</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
@@ -17,8 +17,8 @@
                     <field name="green_boolean" />
                     <field name="amber_boolean" />
                 </field>
-                 <xpath expr="//tree" position="attributes">
-                     <attribute name="decoration-danger">red_boolean == True</attribute>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">red_boolean == True</attribute>
                     <attribute name="decoration-bf">amber_boolean == True</attribute>
                 </xpath>
 
@@ -33,30 +33,40 @@
 
                 <xpath expr = "//field[@name='task_progress']" position="after">
                     <field name="check_task_closed" />
+                    <field name="sla_filled" />
+                    <field name="task_status"/>
+                    <button string="Get SLA" name="get_sla" type="object" class="oe_highlight"/>
+
                 </xpath>
 
-		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="replace">
+                <xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="replace">
                     <field name="unit_amount" string="Actual Days" optional="show" sum="Total" decoration-danger="unit_amount &gt; 24"/>
                 </xpath>
-		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='turn_time']" position="attributes">
+                <xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='turn_time']" position="attributes">
                     <attribute name="string">
                         Activity SLA
                     </attribute>
+                    <attribute name="sum">
+                        Total
+                    </attribute>
                 </xpath>
-		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='end_dates']" position="attributes">
+                <xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='end_dates']" position="attributes">
                     <attribute name="string">
                         Completion Date
                     </attribute>
+                    <attribute name="sum">
+                        Total
+                    </attribute>
                 </xpath>
 
-		<field name="timesheet_ids" position="attributes">
+                <field name="timesheet_ids" position="attributes">
                     <attribute name="attrs">
                         {'readonly': [('check_task_closed', '=', True)]}
                     </attribute>
                 </field>
 
-		<xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
-                    <field name="check_entered" invisible="1" force_save="1" />
+                <xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
+                    <field name="check_entered" force_save="1" />
                     <field name='end_date_boolean' attrs="{'invisible': [('check_entered', '!=', True)]}"/>
                 </xpath>
 
@@ -68,13 +78,10 @@
                 </xpath>
 
                 <xpath expr="//notebook/page[@id='timesheets_tab']/field[@name='timesheet_ids']/tree" position="attributes">
-                     <attribute name="decoration-danger">red_boolean == True</attribute>
+                    <attribute name="decoration-danger">red_boolean == True</attribute>
                     <attribute name="decoration-success">green_boolean == True</attribute>
                     <attribute name="decoration-warning">amber_boolean == True</attribute>
                 </xpath>
-                <group name="project_hours" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </group>
             </field>
         </record>
 
@@ -83,10 +90,10 @@
             <field name="model">project.task.type</field>
             <field name="inherit_id" ref="project.task_type_edit"/>
             <field name="arch" type="xml">
-            	<xpath expr="//field[@name='is_closed']" position="after">
-            		<field name="is_start_stage"/>
-            	</xpath>
+                <xpath expr="//field[@name='is_closed']" position="after">
+                    <field name="is_start_stage"/>
+                </xpath>
             </field>
         </record>
-	</data>
+    </data>
 </odoo>

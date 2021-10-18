@@ -11,6 +11,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/project_views.xml',
+        'views/workflow_views.xml',
     ],
     'installable': True,
     'application': True,
