@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	<data>
+
+        <record model='ir.ui.view' id='workflow_config_form_view'>
+        <field name="name">workflow.config.form</field>
+        <field name="model">workflow.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                            <field name="project_id"/>
+                            <field name="line_ids">
+                                <tree editable="top" sting="SLA Workflow">
+                                    <field name="stage_id"/>
+                                </tree>
+                            </field>
+                    </group>
+                </sheet>
+                 <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                    </div>
+            </form>
+        </field>
+    </record>
+
+        <record id="view_workflow_config_tree" model="ir.ui.view">
+            <field name="name">Workflow Config Tree</field>
+            <field name="model">workflow.config</field>
+            <field name="arch" type="xml">
+                <tree string="Workflow Config">
+                    <field name="project_id"/>
+                    </tree>
+            </field>
+     </record>
+
+         <record id="action_workflow_config" model="ir.actions.act_window">
+          <field name="name">Workflow Confige</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">workflow.config</field>
+          <field name="view_mode">tree,form</field>
+        </record>
+
+		<menuitem name="Workflow config" id="workflow_root" parent="project.menu_project_config" action="action_workflow_config"/>
+	</data>
+</odoo>
